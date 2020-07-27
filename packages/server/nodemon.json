@@ -1,0 +1,5 @@
+{
+  "restartable": "rs",
+  "ignore": ["node_modules", "tools/**/*", "public/**/*"],
+  "delay": 1000
+}

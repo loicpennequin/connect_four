@@ -1,0 +1,18 @@
+{
+    "name": "@c4/shared",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "author": "Daria <lo.pennequin@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "prebuild": "rimraf dist",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:cov": "jest --coverage",
+        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    },
+    "dependencies": {
+        "uuid": "^7.0.1"
+    }
+}

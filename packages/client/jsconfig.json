@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@root/*": ["./*"],
+      "@auth/*": ["auth/*"],
+      "@core/*": ["core/*"],
+      "@layout/*": ["layout/*"],
+      "@pages/*": ["pages/*"],
+      "@styles/*": ["styles/*"],
+      "@theme/*": ["theme/*"],
+      "@ui/*": ["ui/*"],
+      "@user/*": ["user/*"],
+      "@utils/*": ["utils/*"]
+    }
+  },
+  "include": ["src", "src/pages/.js"]
+}
