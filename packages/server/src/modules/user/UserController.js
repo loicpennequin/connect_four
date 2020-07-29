@@ -1,6 +1,7 @@
 import { withLog } from '@root/logger';
 import { UserSerializer } from './UserSerializer';
 import { GameSerializer } from '@root/modules/game';
+import { wrapRequestDecorator as wrap } from '@root/modules/core/ErrorFactory';
 
 export class UserController {
   constructor({ userService, gameService }) {
@@ -9,12 +10,14 @@ export class UserController {
   }
 
   @withLog()
+  @wrap()
   async findAll(_req, res) {
     const users = await this.userService.findAll();
     res.send(users.map(UserSerializer.toDTO));
   }
 
   @withLog()
+  @wrap()
   async create(req, res) {
     const user = await this.userService.create(req.body);
 
@@ -22,6 +25,7 @@ export class UserController {
   }
 
   @withLog()
+  @wrap()
   async findGamesByUserId(req, res) {
     const games = await this.gameService.findAllByUser(req.params.id);
     res.send(games.map(GameSerializer.toDTO));

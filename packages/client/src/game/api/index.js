@@ -5,6 +5,7 @@ const COLUMNS = 7;
 const PLAYER_ONE = 'a';
 const PLAYER_TWO = 'b';
 
+
 class GameApi {
   constructor() {
     this.listeners = {};
@@ -155,4 +156,4 @@ class GameApi {
   }
 }
 
-export default new GameApi();
+export const gameApi = new GameApi();

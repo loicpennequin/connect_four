@@ -19,7 +19,7 @@ const makeCustomProperties = category => props => {
     return recursion(props.theme[category], category).join('\n');
 };
 
-const GlobalStyles = createGlobalStyle`
+export const GlobalStyles = createGlobalStyle`
     ${normalize()}
     :root{
         ${makeCustomProperties('color')}
@@ -52,5 +52,3 @@ const GlobalStyles = createGlobalStyle`
         }
     }
 `;
-
-export default GlobalStyles;

@@ -7,7 +7,7 @@ const router = Router();
 
 const api = makeClassInvoker(UserController);
 
-router.get('/', AuthService.ensureAuthenticated, api('findAll'));
+router.get('/', api('findAll'));
 router.post('/', api('create'));
 router.get('/:id/games', api('findGamesByUserId'));
 

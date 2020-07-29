@@ -1,5 +1,6 @@
 import { withLog } from '@root/logger';
 import config from '@root/config';
+import { wrapRequestDecorator as wrap } from '@root/modules/core/ErrorFactory';
 
 export class AuthController {
   constructor({ authService }) {
@@ -17,6 +18,7 @@ export class AuthController {
   }
 
   @withLog()
+  @wrap()
   async login(req, res) {
     const { accessToken, refreshToken } = await this.authService.login(
       req.body
@@ -27,6 +29,7 @@ export class AuthController {
   }
 
   @withLog()
+  @wrap()
   async refreshToken(req, res) {
     const {
       accessToken,
@@ -38,6 +41,7 @@ export class AuthController {
   }
 
   @withLog()
+  @wrap()
   async logout(req, res) {
     res.clearCookie('refresh_token');
     await this.authService.logout(req.user);

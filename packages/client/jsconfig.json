@@ -11,6 +11,7 @@
       "@theme/*": ["theme/*"],
       "@ui/*": ["ui/*"],
       "@user/*": ["user/*"],
+      "@game/*": ["game/*"],
       "@utils/*": ["utils/*"]
     }
   },

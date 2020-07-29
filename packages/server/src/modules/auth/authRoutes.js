@@ -2,7 +2,6 @@ import { AuthController } from './AuthController.js';
 import { AuthService } from './AuthService.js';
 import { makeClassInvoker } from 'awilix-express';
 import { Router } from 'express';
-
 const router = Router();
 
 const api = makeClassInvoker(AuthController);

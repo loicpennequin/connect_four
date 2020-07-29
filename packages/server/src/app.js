@@ -16,13 +16,14 @@ import config from '@root/config';
 import logger from '@root/logger';
 import { container } from '@root/container';
 import { DatabaseService, WebSocketService } from '@root/modules/core';
-
 import { userRoutes } from '@root/modules/user';
 import { authRoutes, AuthService } from '@root/modules/auth';
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({
+  server
+});
 container.register({
   wss: asValue(wss)
 });
@@ -54,7 +55,7 @@ server.start = async function() {
   WebSocketService.initialize(container);
   await DatabaseService.initialize(container);
 
-  return app.listen(config.PORT, () => {
+  return server.listen(config.PORT, () => {
     logger.info('================API READY================');
     logger.info(`PORT: ${config.PORT}`);
     logger.info(`ENVIRONMENT: ${config.ENV}`);

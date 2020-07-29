@@ -5,6 +5,7 @@ export class UserSerializer {
   @withLog()
   static toDTO(data) {
     return removeEmptyKeys({
+      id: data.id,
       username: data.username,
       email: data.email,
       createdAt: data.created_at,

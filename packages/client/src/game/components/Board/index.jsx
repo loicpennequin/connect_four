@@ -50,22 +50,46 @@ const drop = keyframes`
 
 const StyledBoard = styled.div`
   --cell-size: 6em;
+  position: relative;
   display: grid;
   grid-template-columns: repeat(${props => props.columns}, 1fr);
   grid-template-rows: repeat(${props => props.rows}, 1fr);
   height: calc(${props => props.rows} * var(--cell-size));
   width: calc(${props => props.columns} * var(--cell-size));
+  max-width: 100%;
   margin: 1em auto;
+  @media screen and (max-width: 768px) {
+    --cell-size: 4em;
+  }
+  &::after {
+    background: linear-gradient(130DEG, dodgerblue, navy);
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    mask-image: radial-gradient(
+      circle at center,
+      transparent,
+      transparent 49%,
+      black 50%
+    );
+    mask-size: calc(100% / 7) calc(100% / 6);
+    pointer-events: none;
+  }
 `;
 
 const StyledCell = styled.div`
-  --board-bg-color: dodgerBlue;
+  --board-bg-color: transparent;
   --offset: ${props => props.row * -100}%;
   grid-column: ${props => props.col};
   grid-row: ${props => props.row};
   position: relative;
   &.highlighted {
-    --board-bg-color: deepSkyBlue;
+    @media screen and (min-width: 769px) {
+      --board-bg-color: hsla(200, 85%, 75%, 0.35);
+    }
   }
   &::after {
     background-color: var(--board-bg-color);
@@ -75,6 +99,7 @@ const StyledCell = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 1;
     mask-image: radial-gradient(
       circle at center,
       transparent,

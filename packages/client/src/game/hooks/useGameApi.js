@@ -1,4 +1,4 @@
-import gameApi from '@root/game/api';
+import { gameApi } from '@root/game/api';
 import { useState, useEffect, useCallback } from 'react';
 
 export function useGameApi() {

@@ -27,7 +27,7 @@ export default {
   COOKIE: {
     PATH: '/',
     SECURE: isProd,
-    SAMESITE: false,
+    SAMESITE: true,
     MAXAGE: 604800000,
     HTTPONLY: true
   },
@@ -43,6 +43,7 @@ export default {
     MAXAGE: 7 * 24 * 60 * 60, // 1 week
     ISSUER: 'http://localhost:8000'
   },
+  
   RESET_PASSWORD: {
     EXPIRE: 1000 * 60 * 60 // 1 hour
   },

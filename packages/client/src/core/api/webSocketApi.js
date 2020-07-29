@@ -69,4 +69,4 @@ class WebSocketApi {
   }
 }
 
-export default new WebSocketApi();
+export const webSocketApi = new WebSocketApi();

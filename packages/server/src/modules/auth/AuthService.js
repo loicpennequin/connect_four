@@ -43,8 +43,8 @@ export class AuthService {
   }
 
   @withLog()
-  static async ensureAuthenticated(...args) {
-    return passport.authenticate('jwt', { session: false })(...args);
+  static async ensureAuthenticated(req, res, next, cb) {
+    return passport.authenticate('jwt', { session: false }, cb)(req, res, next);
   }
 
   @withLog()
@@ -60,7 +60,7 @@ export class AuthService {
       refreshToken
     });
 
-    this.webSocketService.emitToAll(
+    this.webSocketService.broadcast(
       constants.EVENTS.USER_LOGGED_IN,
       UserSerializer.toDTO(updatedUser)
     );
@@ -89,7 +89,7 @@ export class AuthService {
       refreshToken: null
     });
 
-    this.webSocketService.emitToAll(
+    this.webSocketService.broadcast(
       constants.EVENTS.USER_LOGGED_OFF,
       UserSerializer.toDTO(user)
     );

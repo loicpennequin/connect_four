@@ -1,5 +1,5 @@
 import { useEffect, useRef, useMemo } from 'react';
-import webSocketApi from '@root/core/api/webSocketApi';
+import { webSocketApi } from '@root/core/api/webSocketApi';
 
 export function useWebsockets() {
   const listeners = useRef([]);

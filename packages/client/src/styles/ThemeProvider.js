@@ -5,7 +5,7 @@ import { constants } from '@c4/shared';
 
 export const ThemeContext = createContext(null);
 
-export default function ThemeProvider({ children }) {
+export function ThemeProvider({ children }) {
     const [currentTheme, setCurrentTheme] = useState(themes[constants.THEMES.DEFAULT]);
     const setTheme = themeKey => setCurrentTheme(themes[themeKey]);
 

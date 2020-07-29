@@ -1,6 +1,7 @@
 import { createLogger, format, transports } from 'winston';
 import config from '@root/config';
-import { isDev, isObject, getParamNames } from '@c4/shared';
+import { isDev, isObject, isFunction, getParamNames } from '@c4/shared';
+import { ApplicationError } from '@root/modules/core/ErrorFactory';
 
 class LogService {
   constructor() {
@@ -45,15 +46,15 @@ class LogService {
             }),
             format.printf(info => {
               const isError = info[Symbol.for('level')] === 'error';
-              const stack =
-                isError && !info.hideStackTrace && info.stack
-                  ? `\n \u001b[31m${info.stack}\u001b[39m`
-                  : '';
-              const originalError =
-                isError && info.originalError
-                  ? `\n[${info.timestamp}] ${info.level}:\tORIGINAL ERROR: ${info.originalError.message}`
-                  : '';
-              return `[${info.timestamp}] ${info.level}:\t${info.message}${originalError}${stack}`;
+
+              let stack = '';
+              if (isError && info.originalError && !info.originalError.isApplicationError) {
+                stack = `\n \u001b[31m${info.originalError.stack}\u001b[39m`;
+              } else if (isError && !info.originalError && info.isApplicationError) {
+                stack = `\n \u001b[31m${info.stack}\u001b[39m`
+              }
+
+              return `[${info.timestamp}] ${info.level}:\t${info.message}${stack}`;
             })
           )
         })
@@ -85,7 +86,7 @@ class LogService {
       const fn = descriptor.value;
       const logger = this.logger;
       descriptor.value = function(...args) {
-        if (typeof target === 'function') {
+        if (isFunction(target)) {
           logger.debug(`${target.name}.${key}()`);
         } else {
           logger.debug(`${target.constructor.name}.${key}()`);
@@ -93,9 +94,9 @@ class LogService {
 
         if (showParams) {
           paramNames.forEach((param, i) => {
-            const value = args[i];
+            const paramValue = args[i];
             const message = `----${param}: ${
-              isObject(value) ? JSON.stringify(value) : value
+              isObject(paramValue) ? JSON.stringify(paramValue) : paramValue
             }`;
             logger.debug(
               message.length > 100 ? message.slice(0, 100) + '...' : message

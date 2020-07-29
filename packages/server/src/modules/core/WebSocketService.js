@@ -1,7 +1,9 @@
+import url from 'url';
 import { v4 as uuid } from 'uuid';
-import { noop } from '@c4/shared';
+import { noop, isObject } from '@c4/shared';
 
 import logger, { withLog } from '@root/logger';
+import { AuthService } from '@root/modules/auth';
 
 const HEARTBEAT_INTERVAL = 15000;
 
@@ -23,6 +25,10 @@ export class WebSocketService {
     );
   }
 
+  get clientIds() {
+    return Array.from(this.clients.keys());
+  }
+
   _doHealthCheck() {
     this.wss.clients.forEach(ws => {
       if (!ws.isAlive) {
@@ -35,19 +41,27 @@ export class WebSocketService {
     });
   }
 
-  _onConnect(ws) {
+  async _onConnect(ws, req) {
     const clientId = uuid();
-    logger.debug(`WS: connected: ${lientId}`);
-    ws.clientId = clientId;
-    ws.isAlive = true;
-    this.clients.set(clientId, ws);
+    logger.debug(`WS: connected: ${clientId}`);
 
-    ws.on('message', message => this._onMessage(ws, message));
-    ws.on('close', () => this._onClientClose(ws));
-    ws.on('pong', () => {
+    const { token } = url.parse(req.url, true).query;
+    req.headers.authorization = `Bearer ${token}`;
+    AuthService.ensureAuthenticated(req, null, null, (err, user) => {
+      if (err || !user) return ws.close();
+
+      ws.on('message', message => this._onMessage(ws, message));
+      ws.on('close', () => this._onClientClose(ws));
+      ws.on('pong', () => {
+        ws.isAlive = true;
+      });
+
+      ws.clientId = clientId;
       ws.isAlive = true;
+      ws.userId = user.id;
+      this.clients.set(clientId, ws);
+      ws.send(this.createMessage('connected', { clientId }));
     });
-    ws.send(this.createMessage('connected', { clientId }));
   }
 
   _onClose() {
@@ -55,7 +69,7 @@ export class WebSocketService {
   }
 
   _onClientClose(ws) {
-    logger.debug(`WS: disconnected: ${lientId}`);
+    logger.debug(`WS: disconnected: ${ws.clientId}`);
     this._onMessage(ws, '{"eventName": "close"}');
     this.clients.delete(ws.clientId);
   }
@@ -70,6 +84,17 @@ export class WebSocketService {
 
   createMessage(eventName, data) {
     return JSON.stringify({ eventName, data });
+  }
+
+  getSocketByUserId(userId) {
+    let socket;
+    this.clients.forEach(value => {
+      if (value.userId === id) {
+        socket = value;
+      }
+    });
+
+    return socket;
   }
 
   on(eventName, cb) {
@@ -87,12 +112,23 @@ export class WebSocketService {
   }
 
   @withLog(true)
-  emit(eventName, data, clientId) {
-    this.clients.get(clientId).send(this.createMessage(eventName, data));
+  emit(eventName, data, ...clientsOrClientIds) {
+    clientsOrClientIds.forEach(clientorClientId => {
+      const ws = isObject(clientOrClientId)
+        ? ws
+        : this.clients.get(clientOrClientId);
+      if (!ws) {
+        return logger.error(
+          `WS: Invalid client or clientId: ${clientorClientId}`
+        );
+      }
+
+      ws.send(this.createMessage(eventName, data));
+    });
   }
-  
+
   @withLog(true)
-  emitToAll(eventName, data) {
+  broadcast(eventName, data) {
     this.clients.forEach(client => {
       client.send(this.createMessage(eventName, data));
     });

@@ -13,19 +13,19 @@ const pageComponentFactory = importFn => props => {
   );
 };
 
-export default {
-  Home: {
+export const routes = [
+  {
     name: 'Home',
     path: '/',
     exact: true,
     component: pageComponentFactory(() => import('@root/pages/home')),
     private: false
   },
-  Lobby: {
+  {
     name: 'Lobby',
     path: '/lobby',
     exact: true,
     component: pageComponentFactory(() => import('@root/pages/lobby')),
     private: true
   }
-};
+];
