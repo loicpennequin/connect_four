@@ -1,12 +1,15 @@
 import logger from '@root/logger';
-import { isProd } from '@c4/shared';
+import { isProd, isEmptyObject } from '@c4/shared';
 
 export class ApplicationError extends Error {
-  constructor(message, errorType, additionalProps) {
+  constructor(message, errorType, { statusCode, ...additionalProps }) {
     super(message);
     this.errorType = errorType;
     this.isApplicationError = true;
-    Object.assign(this, additionalProps);
+    this.statusCode = statusCode;
+    if (!isEmptyObject(additionalProps)) {
+      this.additional = additionalProps;
+    }
   }
 }
 
@@ -21,7 +24,6 @@ const errors = {
     additionalProps = {}
   ) =>
     new ApplicationError(message, 'UNAUTHORIZED', {
-      hideStackTrace: true,
       statusCode: 401,
       ...additionalProps
     }),
@@ -31,28 +33,24 @@ const errors = {
     additionalProps = {}
   ) =>
     new ApplicationError(message, 'FORBIDDEN', {
-      hideStackTrace: true,
       statusCode: 403,
       ...additionalProps
     }),
 
   notFound: (message = 'Resource not found', additionalProps = {}) =>
     new ApplicationError(message, 'NOT_FOUND', {
-      hideStackTrace: true,
       statusCode: 404,
       ...additionalProps
     }),
 
   validationError: (message = 'Invalid input.', additionalProps = {}) =>
     new ApplicationError(message, 'VALIDATION_ERROR', {
-      hideStackTrace: true,
       statusCode: 400,
       ...additionalProps
     }),
 
   tokenExpired: (message = 'Your token has expired.', additionalProps = {}) =>
     new ApplicationError(message, 'TOKEN_EXPIRED', {
-      hideStackTrace: true,
       statusCode: 401,
       ...additionalProps
     }),
@@ -67,6 +65,15 @@ const errors = {
     })
 };
 
+export const serializeError = error => ({
+  error: {
+    message: error.message,
+    statusCode: error.statusCode,
+    type: error.errorType,
+    additional: error.additional
+  }
+});
+
 export const wrapRequest = (defaultError = errors.unexpected()) => promise => {
   return async function wrapped(req, res, next) {
     try {
@@ -78,13 +85,7 @@ export const wrapRequest = (defaultError = errors.unexpected()) => promise => {
         defaultError.originalError = err;
         handledError = handle(defaultError);
       }
-      res.status(handledError.statusCode).json({
-        error: {
-          message: handledError.message,
-          statusCode: handledError.statusCode,
-          type: handledError.errorType
-        }
-      });
+      res.status(handledError.statusCode).json(serializeError(handledError));
     }
   };
 };

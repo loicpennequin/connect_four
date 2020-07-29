@@ -9,6 +9,7 @@ const api = makeClassInvoker(UserController);
 
 router.get('/', api('findAll'));
 router.post('/', api('create'));
+router.get('/:id', api('findById'));
 router.get('/:id/games', api('findGamesByUserId'));
 
 export const userRoutes = router;

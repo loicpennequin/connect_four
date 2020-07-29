@@ -3,6 +3,7 @@ import crypto from 'crypto';
 
 import config from '@root/config';
 import { withLog } from '@root/logger';
+import errors from '@root/modules/core/ErrorFactory';
 
 export class TokenService {
   cookieOptions = {
@@ -32,10 +33,14 @@ export class TokenService {
 
   @withLog()
   verifyRefreshToken(token) {
-    // if (!token) throw errorFactory.unauthorized();
-    return jwt.verify(token, config.REFRESH_TOKEN.SECRET, {
-      maxAge: config.REFRESH_TOKEN.MAXAGE,
-      issuer: config.REFRESH_TOKEN.ISSUER
-    });
+    if (!token) throw errorFactory.unauthorized();
+    try {
+      return jwt.verify(token, config.REFRESH_TOKEN.SECRET, {
+        maxAge: config.REFRESH_TOKEN.MAXAGE,
+        issuer: config.REFRESH_TOKEN.ISSUER
+      });
+    } catch {
+      throw errorFactory.tokenExpired();
+    }
   }
 }

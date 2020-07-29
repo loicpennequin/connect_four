@@ -18,6 +18,7 @@ import { container } from '@root/container';
 import { DatabaseService, WebSocketService } from '@root/modules/core';
 import { userRoutes } from '@root/modules/user';
 import { authRoutes, AuthService } from '@root/modules/auth';
+import errors, { serializeError } from '@root/modules/core/ErrorFactory';
 
 const app = express();
 const server = http.createServer(app);
@@ -49,6 +50,9 @@ app.use(passport.initialize());
 app.use(scopePerRequest(container));
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
+app.use('*', (req, res) =>
+  res.status(404).json(serializeError(errors.notFound()))
+);
 
 server.start = async function() {
   AuthService.initialize(container);

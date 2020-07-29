@@ -4,6 +4,8 @@ import Joi from '@hapi/joi';
 import { withLog } from '@root/logger';
 import { pick } from '@c4/shared';
 
+import errors from '@root/modules/core/ErrorFactory';
+
 export class Validator extends ObjectionValidator {
   @withLog()
   validate({ model, json, options, ctx }) {
@@ -18,7 +20,7 @@ export class Validator extends ObjectionValidator {
     .keys(schema)
     .validate(json);
     
-    if (error) throw error;
+    if (error) throw errors.validationError('Invalid input', error);
     
     return value;
   }

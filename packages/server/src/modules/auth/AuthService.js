@@ -9,6 +9,7 @@ import { PasswordService } from '@root/modules/core';
 import config from '@root/config';
 import { withLog } from '@root/logger';
 import { UserSerializer } from '@root/modules/user';
+import errors from '@root/modules/core/ErrorFactory';
 
 export class AuthService {
   constructor({ userService, tokenService, webSocketService }) {
@@ -50,7 +51,7 @@ export class AuthService {
   @withLog()
   async login({ username, password }) {
     const user = await this.userService.findByUsername(username);
-    if (!user) throw new Error('Unauthorized');
+    if (!user) throw errors.unaurhorized('Invalid credentials.');
     PasswordService.compare(password, user.password_hash);
 
     const accessToken = this.tokenService.generateJWT(user.id);
@@ -70,10 +71,11 @@ export class AuthService {
 
   @withLog(true)
   async refreshAccessToken(refreshToken) {
+    if (!refreshToken) throw errors.tokenExpired();
     const user = await this.userService.findByRefreshToken(refreshToken);
 
-    if (!user) throw Error('invalid refresh token');
-
+    if (!user) throw errors.unauthorized();;
+    
     this.tokenService.verifyRefreshToken(user.refresh_token);
 
     const accessToken = this.tokenService.generateJWT(user.id);

@@ -1,6 +1,8 @@
 import { withLog } from '@root/logger';
 import config from '@root/config';
-import { wrapRequestDecorator as wrap } from '@root/modules/core/ErrorFactory';
+import errors, {
+  wrapRequestDecorator as wrap
+} from '@root/modules/core/ErrorFactory';
 
 export class AuthController {
   constructor({ authService }) {
@@ -45,7 +47,7 @@ export class AuthController {
   async logout(req, res) {
     res.clearCookie('refresh_token');
     await this.authService.logout(req.user);
-    
+
     req.sendStatus(204);
   }
 }
