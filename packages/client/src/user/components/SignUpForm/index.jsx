@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers';
@@ -25,6 +25,7 @@ const schema = yup.object().shape({
 });
 
 export function SignUpForm({ onSubmit }) {
+  const [generalError, setGeneralError] = useState(null);
   const { register, handleSubmit, setError, errors, formState } = useForm({
     mode: 'onBlur',
     resolver: yupResolver(schema),
@@ -32,15 +33,20 @@ export function SignUpForm({ onSubmit }) {
     shouldFocusError: true
   });
 
-  const submit = useCallback(async (values) => {
-   try {
-     await onSubmit(values);
-   } catch(err) {
-     err?.additional?.violations.forEach(error => {
-       setError(error.field, error);
-     });
-   }
-  }, [onSubmit, setError]);
+  const submit = useCallback(
+    async values => {
+      try {
+        await onSubmit(values);
+      } catch (err) {
+        setGeneralError(err);
+
+        err?.additional?.violations.forEach(error => {
+          setError(error.field, error);
+        });
+      }
+    },
+    [onSubmit, setError]
+  );
 
   return (
     <form
@@ -75,6 +81,7 @@ export function SignUpForm({ onSubmit }) {
       <ErrorMessage errors={errors} name="passwordConfirm" />
 
       <button disabled={formState.isSubmitting}>Sign up</button>
+      {generalError && <div>{generalError.message}</div>}
     </form>
   );
 }
