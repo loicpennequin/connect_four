@@ -66,12 +66,10 @@ const errors = {
 };
 
 export const serializeError = error => ({
-  error: {
-    message: error.message,
-    statusCode: error.statusCode,
-    type: error.errorType,
-    additional: error.additional
-  }
+  message: error.message,
+  statusCode: error.statusCode,
+  type: error.errorType,
+  additional: error.additional
 });
 
 export const wrapRequest = (defaultError = errors.unexpected()) => promise => {
@@ -90,6 +88,16 @@ export const wrapRequest = (defaultError = errors.unexpected()) => promise => {
   };
 };
 
+export const wrap = () => promise => {
+  return async function wrapped(...args) {
+    try {
+      return await promise(...args);
+    } catch (err) {
+      return handle(error);
+    }
+  };
+};
+
 export const wrapRequestDecorator = (error = errors.unexpected()) => (
   target,
   key,
@@ -98,6 +106,14 @@ export const wrapRequestDecorator = (error = errors.unexpected()) => (
   const promise = descriptor.value;
   descriptor.value = function decorated(...args) {
     return wrapRequest(error)(promise.bind(this))(...args);
+  };
+  return descriptor;
+};
+
+export const wrapDecorator = () => (key, target, descriptor) => {
+  const promise = descriptor.value;
+  descriptor.value = function decorated(...args) {
+    return wrap(error)(promise.bind(this))(...args);
   };
   return descriptor;
 };

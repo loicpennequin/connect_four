@@ -1,6 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { logger } from 'redux-logger';
+import { createLogger } from 'redux-logger';
 import { usersReducer } from '@user/userSlice';
+
+const logger = createLogger({
+  collapsed: true
+});
 
 export const store = configureStore({
   reducer: {

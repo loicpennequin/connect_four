@@ -60,6 +60,7 @@ export class HttpClient {
     for (let listener of this.listeners[eventName] || []) {
       args = await listener(...args);
     }
+    if (args.length <= 1) return args[0];
     return args;
   }
 

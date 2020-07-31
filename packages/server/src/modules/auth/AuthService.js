@@ -50,8 +50,11 @@ export class AuthService {
 
   @withLog()
   async login({ username, password }) {
+    if (!username) throw errors.unauthorized();
+
     const user = await this.userService.findByUsername(username);
     if (!user) throw errors.unaurhorized('Invalid credentials.');
+    
     PasswordService.compare(password, user.password_hash);
 
     const accessToken = this.tokenService.generateJWT(user.id);

@@ -15,7 +15,7 @@ export class AuthService {
       Buffer.from(_jwt.split('.')[1], 'base64').toString('binary')
     );
   }
-  
+
   static onRequest(url, options) {
     if (isDefined(_jwt)) {
       options.headers.set('Authorization', AuthService.jwt);
@@ -29,7 +29,7 @@ export class AuthService {
       const { token } = await httpClient.get(`/auth/refresh_token`);
       _jwt = token;
     } catch (err) {
-      throw err;
+      console.error(err);
     }
   }
 

@@ -1,4 +1,5 @@
 import { constants } from '@c4/shared';
+import errors, { wrapDecorator as wrap } from '@root/modules/core/ErrorFactory';
 
 export class GameSubscribers {
   constructor(container) {
@@ -31,6 +32,7 @@ export class GameSubscribers {
     );
   }
 
+  @wrap()
   async onChallengeInitiated(ws, { challengedId }) {
     const from = await this.userService.findById(ws.userId);
 
@@ -41,6 +43,7 @@ export class GameSubscribers {
     );
   }
 
+  @wrap()
   async onChallengeAccepted(ws, { challengerId }) {
     const [from, to] = await this.userService.findByIds([
       challengerId,
@@ -54,6 +57,7 @@ export class GameSubscribers {
     );
   }
 
+  @wrap()
   async onChallengeRefused(ws, { challengerId }) {
     const [from, to] = await this.userService.findByIds([
       challengerId,
@@ -67,6 +71,7 @@ export class GameSubscribers {
     );
   }
 
+  @wrap()
   async onLobbyEntered(ws) {
     const clients = Array.from(this.websocketService.clients.values());
 
@@ -83,6 +88,7 @@ export class GameSubscribers {
     );
   }
 
+  @wrap()
   async onLobbyLeft(ws) {
     const clients = Array.from(this.websocketService.clients.values()).filter(
       client => client.clientId !== ws.clientId

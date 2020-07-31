@@ -19,7 +19,7 @@ export default {
     warmGrey: 'hsla(25, 15%, 45%, 1)',
     grey: 'hsla(0, 0%, 72%, 1)',
     lightGrey: 'hsla(0, 0%, 85%, 1)',
-    ultraLightGrey: 'hsla(0, 0%, 96%, 1)',
+    ultraLightGrey: 'hsla(0, 0%, 97%, 1)',
     darkGrey: 'hsla(0, 0%, 18%, 1)',
     white: 'hsla(0, 0%, 100%, 1)',
     black: 'hsla(0, 0%, 6%, 1)'

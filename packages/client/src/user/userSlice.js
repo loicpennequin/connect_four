@@ -23,6 +23,7 @@ const { actions, reducer } = createSlice({
     getCurrentUserStart: startLoading,
     getUsersStart: startLoading,
     getUserStart: startLoading,
+    createUserStart: startLoading,
     getCurrentUserSuccess(state, { payload }) {
       state.isLoading = false;
       state.error = null;
@@ -41,9 +42,14 @@ const { actions, reducer } = createSlice({
         state.usersById[user.id] = user;
       })
     },
+    createUserSuccess(state) {
+      state.isLoading = false;
+      state.error = null
+    },
     getCurrentUserFailure: loadingFailed,
     getUsersFailure: loadingFailed,
-    getUserFailure: loadingFailed
+    getUserFailure: loadingFailed,
+    createUserFailure: loadingFailed
   }
 });
 

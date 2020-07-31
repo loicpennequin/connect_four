@@ -20,7 +20,7 @@ export class AuthController {
   }
 
   @withLog()
-  @wrap()
+  @wrap(errors.unauthorized())
   async login(req, res) {
     const { accessToken, refreshToken } = await this.authService.login(
       req.body

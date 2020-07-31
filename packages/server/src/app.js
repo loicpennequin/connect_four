@@ -22,9 +22,7 @@ import errors, { serializeError } from '@root/modules/core/ErrorFactory';
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({
-  server
-});
+const wss = new WebSocket.Server({ server });
 container.register({
   wss: asValue(wss)
 });

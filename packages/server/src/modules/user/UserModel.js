@@ -2,6 +2,7 @@ import Joi from '@hapi/joi';
 
 import { BaseModel, PasswordService } from '@root/modules/core';
 import { withLog } from '@root/logger';
+import errors from '@root/modules/core/ErrorFactory';
 
 export class User extends BaseModel {
   static get tableName() {
@@ -47,7 +48,12 @@ export class User extends BaseModel {
     }
   }
 
-  $beforeInsert() {
+  async $beforeInsert() {
+    const user = await User.query().select('id').where({ username: this.username }).orWhere({ email: this.email }).first();
+    if (user) {
+      console.log(user)
+      throw errors.validationError('This username or email already exists.');
+    }
     this.generateHashedPassword();
   }
 

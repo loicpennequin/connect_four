@@ -15,6 +15,8 @@ export class UserSerializer {
       id: data.id,
       username: data.username,
       email: data.email,
+      password: data.password,
+      passwordConfirm: data.passwordConfirm,
       createdAt: data.createdAt
     })
   }

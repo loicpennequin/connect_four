@@ -1,22 +1,8 @@
-import React, { useEffect } from 'react';
-import Board from '@root/game/components/Board';
-import { useUsers } from '@root/user/hooks/useUsers';
+import React from 'react';
+import { SignUpForm } from '@user/components/SignUpForm';
+import { useUsers } from '@user/hooks/useUsers';
 
 export default function HomePage() {
-  const { users, getAllUsers, isLoading } = useUsers();
-
-  useEffect(() => {
-    getAllUsers();
-  }, [getAllUsers]);
-
-  return (
-    <>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <div>User count: {users.length}</div>
-      )}
-      <Board />
-    </>
-  );
+  const { createUser } = useUsers();
+  return <SignUpForm onSubmit={createUser} />
 }

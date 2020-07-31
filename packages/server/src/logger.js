@@ -50,7 +50,7 @@ class LogService {
               let stack = '';
               if (isError && info.originalError && !info.originalError.isApplicationError) {
                 stack = `\n \u001b[31m${info.originalError.stack}\u001b[39m`;
-              } else if (isError && !info.originalError && info.isApplicationError) {
+              } else if (isError && !info.originalError && !info.isApplicationError) {
                 stack = `\n \u001b[31m${info.stack}\u001b[39m`
               }
 
