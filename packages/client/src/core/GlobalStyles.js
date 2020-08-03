@@ -44,7 +44,6 @@ export const GlobalStyles = createGlobalStyle`
     
     a {
         color: var(--color-link);
-        text-decoration: none;
         &:hover, 
         &:active, 
         &:focus {

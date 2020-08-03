@@ -1,22 +1,20 @@
 import React from 'react';
-import { SignUpForm } from '@user/components/SignUpForm';
-import { useUsers } from '@user/hooks/useUsers';
+import { SignInForm } from '@auth/components/SignInForm';
+import { useAuth } from '@auth/hooks/useAuth';
 import { useToast } from '@core/hooks/useToast';
 
 export default function HomePage() {
-  const { createUser } = useUsers();
-  const { show } = useToast();
-
+  const { login } = useAuth();
+  const toast = useToast();
+  
   const handleSubmit = async data => {
     try {
-      await createUser(data);
-      show('Sign up successful !')
-    } catch(err) {
+      await login(data);
+      toast.show('Login successful !');
+    } catch (err) {
       throw err;
     }
-  }
-  
-  return (
-    <SignUpForm onSubmit={handleSubmit} />
-  )
+  };
+
+  return <SignInForm onSubmit={handleSubmit} />;
 }

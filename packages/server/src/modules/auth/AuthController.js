@@ -46,8 +46,8 @@ export class AuthController {
   @wrap()
   async logout(req, res) {
     res.clearCookie('refresh_token');
-    await this.authService.logout(req.user);
+    await this.authService.logout(req.user.id);
 
-    req.sendStatus(204);
+    res.sendStatus(204);
   }
 }

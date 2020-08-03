@@ -41,6 +41,7 @@ export class HttpClient {
         if (!response.ok) throw await response.json();
         resolve(await this._emit(RESPONSE, response));
       } catch (err) {
+        err.request = request;
         reject(await this._emit(RESPONSE_ERROR, err));
       }
     };
@@ -114,4 +115,9 @@ export class HttpClient {
 
 export const httpClient = new HttpClient();
 
-httpClient.on(RESPONSE, response => response.json());
+httpClient.on(RESPONSE, response => {
+  if (response.status !== 204) {
+    return response.json()
+  }
+  return {};
+});

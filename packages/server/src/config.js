@@ -1,8 +1,7 @@
 import dotenv from 'dotenv';
 import dbConfig from '../knexfile'
 import path from 'path';
-import { isProd } from '@c4/shared';
-
+import { isProd, constants } from '@c4/shared';
 dotenv.config({
   path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`)
 });
@@ -34,7 +33,7 @@ export default {
 
   JWT: {
     SECRET: process.env.SESSION_SECRET,
-    MAXAGE: 15 * 60, // 15min
+    MAXAGE: constants.JWT.MAXAGE,
     ISSUER: 'http://localhost:8000'
   },
 

@@ -9,7 +9,7 @@ import { PasswordService } from '@root/modules/core';
 import config from '@root/config';
 import { withLog } from '@root/logger';
 import { UserSerializer } from '@root/modules/user';
-import errors from '@root/modules/core/ErrorFactory';
+import errors, { serializeError } from '@root/modules/core/ErrorFactory';
 
 export class AuthService {
   constructor({ userService, tokenService, webSocketService }) {
@@ -45,6 +45,15 @@ export class AuthService {
 
   @withLog()
   static async ensureAuthenticated(req, res, next, cb) {
+    if (!cb) {
+      cb = (err, user) => {
+        if (err || !user) {
+          return res.status(401).json(serializeError(errors.unauthorized()));
+        }
+        req.user = user;
+        next();
+      };
+    }
     return passport.authenticate('jwt', { session: false }, cb)(req, res, next);
   }
 
@@ -53,8 +62,8 @@ export class AuthService {
     if (!username) throw errors.unauthorized();
 
     const user = await this.userService.findByUsername(username);
-    if (!user) throw errors.unaurhorized('Invalid credentials.');
-    
+    if (!user) throw errors.unauthorized('Invalid credentials.');
+
     PasswordService.compare(password, user.password_hash);
 
     const accessToken = this.tokenService.generateJWT(user.id);
@@ -77,8 +86,8 @@ export class AuthService {
     if (!refreshToken) throw errors.tokenExpired();
     const user = await this.userService.findByRefreshToken(refreshToken);
 
-    if (!user) throw errors.unauthorized();;
-    
+    if (!user) throw errors.unauthorized();
+
     this.tokenService.verifyRefreshToken(user.refresh_token);
 
     const accessToken = this.tokenService.generateJWT(user.id);
@@ -90,7 +99,7 @@ export class AuthService {
 
   @withLog()
   async logout(userId) {
-    const user = await this.userId.update(userId, {
+    const user = await this.userService.update(userId, {
       refreshToken: null
     });
 

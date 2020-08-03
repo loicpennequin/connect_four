@@ -2,31 +2,15 @@ import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers';
+import { Link } from '@core/components/Link';
 import * as yup from 'yup';
 
-import { Link } from '@core/components/Link';
-  
 const schema = yup.object().shape({
-  username: yup
-    .string()
-    .required()
-    .min(4)
-    .max(16),
-  email: yup
-    .string()
-    .required()
-    .email(),
-  password: yup
-    .string()
-    .required()
-    .min(6),
-  passwordConfirm: yup
-    .string()
-    .required()
-    .oneOf([yup.ref('password')])
+  username: yup.string().required(),
+  password: yup.string().required()
 });
 
-export function SignUpForm({ onSubmit }) {
+export function SignInForm({ onSubmit }) {
   const [generalError, setGeneralError] = useState(null);
   const { register, handleSubmit, setError, errors, formState } = useForm({
     mode: 'onBlur',
@@ -56,13 +40,9 @@ export function SignUpForm({ onSubmit }) {
       onSubmit={handleSubmit(submit)}
       style={{ display: 'flex', flexDirection: 'column' }}
     >
-      <label htmlFor="create-user_username">Username</label>
-      <input id="create-user_username" name="username" ref={register} />
+      <label htmlFor="signin_username">Username</label>
+      <input id="signin_username" name="username" ref={register} />
       <ErrorMessage errors={errors} name="username" />
-
-      <label htmlFor="create-user_email">Email</label>
-      <input id="create-user_email" name="email" type="email" ref={register} />
-      <ErrorMessage errors={errors} name="email" />
 
       <label htmlFor="create-user_password">Password</label>
       <input
@@ -73,18 +53,8 @@ export function SignUpForm({ onSubmit }) {
       />
       <ErrorMessage errors={errors} name="password" />
 
-      <label htmlFor="create-user_password-confirm">Confirm Password</label>
-      <input
-        id="create-user_password-confirm"
-        type="password"
-        name="passwordConfirm"
-        ref={register}
-      />
-      <ErrorMessage errors={errors} name="passwordConfirm" />
-
-      <Link to="Home">I already have an account</Link>
-
-      <button disabled={formState.isSubmitting}>Sign up</button>
+      <button disabled={formState.isSubmitting}>Sign </button>
+      <Link to="SignUp">I don't have an account</Link>
       {generalError && <div>{generalError.message}</div>}
     </form>
   );

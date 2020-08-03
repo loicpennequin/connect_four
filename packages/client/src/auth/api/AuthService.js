@@ -5,10 +5,10 @@ let _jwt;
 
 export class AuthService {
   static get jwt() {
-    return `Bearer ${_jwt}`;
+    return _jwt;
   }
 
-  static get jwtPayload() {
+  static getJwtPayload() {
     if (!_jwt) return null;
 
     return JSON.parse(
@@ -18,19 +18,31 @@ export class AuthService {
 
   static onRequest(url, options) {
     if (isDefined(_jwt)) {
-      options.headers.set('Authorization', AuthService.jwt);
+      options.headers.set('Authorization', `Bearer ${_jwt}`);
     }
 
     return [url, options];
   }
 
-  static async refreshJwt() {
-    try {
-      const { token } = await httpClient.get(`/auth/refresh_token`);
-      _jwt = token;
-    } catch (err) {
-      console.error(err);
+  static async onResponseError(error) {
+    if (
+      error.statusCode === 401 &&
+      error.request.headers.has('Authorization') &&
+      !error.request.url.includes('refresh_token')
+    ) {
+      await AuthService.refreshJwt();
+      _jwt = null;
+      error.request.headers.delete('Authorization');
+      httpClient.get[error.request.method](error.request.url, {
+        ...error.request
+      });
     }
+    return error;
+  }
+
+  static async refreshJwt() {
+    const { token } = await httpClient.get(`/auth/refresh_token`);
+    _jwt = token;
   }
 
   static async login(credentials) {
@@ -39,6 +51,15 @@ export class AuthService {
         body: credentials
       });
       _jwt = token;
+    } catch (err) {
+      throw err;
+    }
+  }
+  
+  static async logout(credentials) {
+    try {
+      await httpClient.get(`/auth/logout`);
+      _jwt = null;
     } catch (err) {
       throw err;
     }

@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { lazy } from 'react';
+import { constants } from '@c4/shared';
 
 const Loading = () => <div>Page Loading...</div>;
 
@@ -19,13 +20,20 @@ export const routes = [
     path: '/',
     exact: true,
     component: pageComponentFactory(() => import('@root/pages/home')),
-    private: false
+    authLevel: constants.AUTH_LEVELS.PUBLIC_ONLY
+  },
+  {
+    name: 'SignUp',
+    path: '/signin',
+    exact: true,
+    component: pageComponentFactory(() => import('@root/pages/signUp')),
+    authLevel: constants.AUTH_LEVELS.PUBLIC_ONLY
   },
   {
     name: 'Lobby',
     path: '/lobby',
     exact: true,
     component: pageComponentFactory(() => import('@root/pages/lobby')),
-    private: true
+    authLevel: constants.AUTH_LEVELS.PRIVATE
   }
 ];

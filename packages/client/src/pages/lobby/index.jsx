@@ -1,5 +1,13 @@
 import React from 'react';
+import { useAuth } from '@root/auth/hooks/useAuth';
+// import { useUsers } from '@root/user/hooks/useUsers';
 
 export default function LobbyPage() {
-  return <div>Hi</div>
+  const { logout }= useAuth();
+
+  const handleClick = async () => {
+    await logout();
+  }
+
+  return <button onClick={handleClick}>Sign off</button>
 }

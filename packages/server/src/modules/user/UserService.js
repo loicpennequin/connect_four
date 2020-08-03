@@ -22,12 +22,14 @@ export class UserService {
 
   @withLog(true)
   async findById(id) {
-    return await User.query().findById(id);
+    return await User.query().findById(id).throwIfNotFound();
   }
 
   @withLog(true)
   async findByIds(ids) {
-    return await User.query().findByIds(ids);
+    return await User.query()
+      .findByIds(ids)
+      .throwIfNotFound();
   }
 
   @withLog(true)
@@ -37,9 +39,8 @@ export class UserService {
 
   @withLog(true)
   async update(id, data) {
-    return User.query().patchAndFetchById(
-      id,
-      UserSerializer.toPersistence(data)
-    );
+      return User.query()
+        .patchAndFetchById(id, UserSerializer.toPersistence(data))
+        .throwIfNotFound();
   }
 }

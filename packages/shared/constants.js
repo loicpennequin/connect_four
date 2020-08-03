@@ -17,10 +17,13 @@ export const constants = {
     PUBLIC: 'public'
   },
   PATHS: {
-    AUTHENTICATED_REDIRECT_PATH: '/',
+    AUTHENTICATED_REDIRECT_PATH: '/lobby',
     UNAUTHORIZED_REDIRECT_PATH: '/',
   },
   THEMES: {
     DEFAULT: 'default'
+  },
+  JWT: {
+    MAXAGE: 15 * 60 // 15min
   }
 };

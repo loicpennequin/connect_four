@@ -1,37 +1,24 @@
-import { useCallback } from 'react';
-import { userActions } from '@user/userSlice';
-import { useSelector, useDispatch } from 'react-redux';
 import { UserService } from '@user/api/UserService';
+import { AuthService } from '@auth/api/AuthService';
+import { useQuery, useMutation } from 'react-query';
 
 export function useUsers() {
-  const dispatch = useDispatch();
-
-  const users = useSelector(state => Object.values(state.users.usersById));
-  const isLoading = useSelector(state => state.users.isLoading);
-  const error = useSelector(state => state.users.error);
-
-  const currentUser = useSelector(
-    state => state.users.usersById[state.users.currentUserId]
+  const currentUser = useQuery(
+    'currentUser',
+    async () => {
+      const userId = AuthService.getJwtPayload()?.sub;
+      if (!userId) return null;
+      return UserService.getUserById(userId);
+    },
+    {
+      retry: false
+    }
   );
 
-  const getAllUsers = useCallback(async () => {
-    try {
-      dispatch(userActions.getUsersStart());
-      const users = await UserService.getAllUsers();
-      dispatch(userActions.getUsersSuccess(users));
-    } catch (err) {
-      dispatch(userActions.getUsersFailure(err));
-    }
-  }, [dispatch]);
-
-  const createUser = useCallback(data => UserService.createUser(data), []);
+  const createUser = useMutation(UserService.createUser);
 
   return {
-    isLoading,
-    users,
-    error,
     currentUser,
-    getAllUsers,
     createUser
   };
 }

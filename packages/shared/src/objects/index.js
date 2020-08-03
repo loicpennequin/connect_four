@@ -1,4 +1,4 @@
-import { isObject, isDefined } from '../assertions';
+import { isObject } from '../assertions';
 
 export function mapObject(
   obj,
@@ -50,12 +50,12 @@ export function mergeDeep(target, ...sources) {
 export function hasKey(obj, keyPath) {
   let result = true;
   const steps = keyPath.split('.');
-  
+
   for (let step of steps) {
     if (!obj.hasOwnProperty(step)) {
       result = false;
       break;
-    };
+    }
     obj = obj[step];
   }
 
@@ -64,6 +64,6 @@ export function hasKey(obj, keyPath) {
 
 export function removeEmptyKeys(obj) {
   return Object.fromEntries(
-    Object.entries(obj).filter(([key, value]) => isDefined(value))
+    Object.entries(obj).filter(([_key, value]) => value !== undefined)
   );
 }
