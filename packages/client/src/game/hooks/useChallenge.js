@@ -34,9 +34,8 @@ export function useChallenge({
         challengedId,
         challengerId: currentUser.data.id
       });
-
       setPendingChallenges(challenges =>
-        challenges.filter(c => c.challengedId === challengedId)
+        challenges.filter(c => c.challengedId !== challengedId)
       );
     },
     [emit, currentUser.data.id, setPendingChallenges]
@@ -48,9 +47,8 @@ export function useChallenge({
         challengedId: currentUser.data.id,
         challengerId
       });
-
       setPendingChallenges(challenges =>
-        challenges.filter(c => c.challengerId === challengerId)
+        challenges.filter(c => c.challengerId !== challengerId)
       );
     },
     [emit, currentUser.data.id, setPendingChallenges]
@@ -64,7 +62,7 @@ export function useChallenge({
       });
 
       setPendingChallenges(challenges =>
-        challenges.filter(c => c.challengerId === challengerId)
+        challenges.filter(c => c.challengerId !== challengerId)
       );
     },
     [emit, currentUser.data.id, setPendingChallenges]
@@ -92,7 +90,7 @@ export function useChallenge({
 
   useEffect(() => {
     const unsub = on(
-      EVENTS.USER_CANCLELLED_CHALLENGE,
+      EVENTS.USER_CANCELLED_CHALLENGE,
       ({ challenger, challenged }) => {
         setPendingChallenges(challenges =>
           challenges.filter(

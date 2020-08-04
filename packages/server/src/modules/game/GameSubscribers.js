@@ -12,6 +12,11 @@ export class GameSubscribers {
       constants.EVENTS.USER_INITIATED_CHALLENGE,
       this.onChallengeInitiated.bind(this)
     );
+    
+    this.websocketService.on(
+      constants.EVENTS.USER_CANCELLED_CHALLENGE,
+      this.onChallengeCancelled.bind(this)
+    );
 
     this.websocketService.on(
       constants.EVENTS.USER_ACCEPTED_CHALLENGE,
@@ -19,8 +24,8 @@ export class GameSubscribers {
     );
 
     this.websocketService.on(
-      constants.EVENTS.USER_ACCEPTED_CHALLENGE,
-      this.onChallengeAccepted.bind(this)
+      constants.EVENTS.USER_REFUSED_CHALLENGE,
+      this.onChallengeRefused.bind(this)
     );
   }
 

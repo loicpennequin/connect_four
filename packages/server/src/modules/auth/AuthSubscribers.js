@@ -42,7 +42,8 @@ export class AuthSubscribers {
 
     this.websocketService.broadcastToOthers(
       constants.EVENTS.USER_ENTERED_LOBBY,
-      UserSerializer.toDTO(user)
+      UserSerializer.toDTO(user),
+      user.id
     );
   }
 }
