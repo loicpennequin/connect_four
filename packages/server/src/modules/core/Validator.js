@@ -17,6 +17,7 @@ export class Validator extends ObjectionValidator {
     } else {
       schema = model.validationSchema;
     }
+
     const { error, value } = Joi.object()
       .keys(schema)
       .validate(json, { abortEarly: false });

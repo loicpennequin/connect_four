@@ -1,13 +1,17 @@
 import React from 'react';
 import { useAuth } from '@root/auth/hooks/useAuth';
-// import { useUsers } from '@root/user/hooks/useUsers';
+import { useCurrentUser } from '@root/user/hooks/useCurrentUser';
+import { ConnectedUsersList } from '@user/components/ConnectedUsersList'
 
 export default function LobbyPage() {
-  const { logout }= useAuth();
+  const { logout } = useAuth();
+  const currentUser = useCurrentUser();
 
-  const handleClick = async () => {
-    await logout();
-  }
-
-  return <button onClick={handleClick}>Sign off</button>
+  return (
+    <>
+      <div>Hello, {currentUser.data?.username}</div>
+      <ConnectedUsersList />
+      <button onClick={logout}>Sign off</button>
+    </>
+  );
 }

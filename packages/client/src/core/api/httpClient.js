@@ -1,6 +1,6 @@
 import mergeHeaders from 'merge-headers';
 import { AbortableFetch } from '@root/core/api/AbortableFetch';
-import { isString } from '@c4/shared';
+import { isString, isObject } from '@c4/shared';
 
 export const REQUEST = 'request';
 export const RESPONSE = 'response';
@@ -26,11 +26,11 @@ export class HttpClient {
     };
   }
 
-  _createRequestHandler(url, options) {
+  _createRequestHandler(url, { query, ...options }) {
     return async (resolve, reject, { signal }) => {
       const [requestUrl, requestOptions] = await this._emit(
         REQUEST,
-        this._prependUrl(url),
+        this._prepareUrl(url, query),
         this._getOptions({ ...options, signal })
       );
 
@@ -52,16 +52,22 @@ export class HttpClient {
     return new AbortableFetch(handler, this.requestTimeout);
   }
 
-  _prependUrl(url) {
-    if (url.startsWith('http')) return url;
-    return this.baseUrl + url;
+  _prepareUrl(url, query = {}) {
+    url = new URL(url, this.baseUrl);
+    const params = Object.entries(query).map(([key, value]) => [
+      key,
+      isObject(value) ? JSON.stringify(value) : value
+    ]);
+
+    url.search = new URLSearchParams(params);
+
+    return url;
   }
 
   async _emit(eventName, ...args) {
     for (let listener of this.listeners[eventName] || []) {
       args = await listener(...args);
     }
-    if (args.length <= 1) return args[0];
     return args;
   }
 
@@ -117,7 +123,7 @@ export const httpClient = new HttpClient();
 
 httpClient.on(RESPONSE, response => {
   if (response.status !== 204) {
-    return response.json()
+    return response.json();
   }
   return {};
 });

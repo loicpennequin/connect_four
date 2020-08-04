@@ -18,6 +18,7 @@ import { container } from '@root/container';
 import { DatabaseService, WebSocketService } from '@root/modules/core';
 import { userRoutes } from '@root/modules/user';
 import { authRoutes, AuthService } from '@root/modules/auth';
+import { GameService } from '@root/modules/game';
 import errors, { serializeError } from '@root/modules/core/ErrorFactory';
 
 const app = express();
@@ -55,6 +56,7 @@ app.use('*', (req, res) =>
 server.start = async function() {
   AuthService.initialize(container);
   WebSocketService.initialize(container);
+  GameService.initialize(container);
   await DatabaseService.initialize(container);
 
   return server.listen(config.PORT, () => {

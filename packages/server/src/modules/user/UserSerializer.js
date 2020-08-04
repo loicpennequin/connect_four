@@ -9,7 +9,8 @@ export class UserSerializer {
       username: data.username,
       email: data.email,
       createdAt: data.created_at,
-      updatedAt: data.updated_at
+      updatedAt: data.updated_at,
+      isOnline: !!data.is_online
     })
   }
   
@@ -20,7 +21,8 @@ export class UserSerializer {
       email: data.email,
       password: data.password,
       passwordConfirm: data.passwordConfirm,
-      refresh_token: data.refreshToken
+      refresh_token: data.refreshToken,
+      is_online: data.isOnline
     })
   }
 }

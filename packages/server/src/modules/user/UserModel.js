@@ -32,6 +32,10 @@ export class User extends BaseModel {
 
       refresh_token: Joi.string()
         .allow(null)
+        .optional(),
+
+      is_online: Joi.boolean()
+        .allow(null)
         .optional()
     };
   }
@@ -49,9 +53,13 @@ export class User extends BaseModel {
   }
 
   async $beforeInsert() {
-    const user = await User.query().select('id').where({ username: this.username }).orWhere({ email: this.email }).first();
+    const user = await User.query()
+      .select('id')
+      .where({ username: this.username })
+      .orWhere({ email: this.email })
+      .first();
     if (user) {
-      console.log(user)
+      console.log(user);
       throw errors.validationError('This username or email already exists.');
     }
     this.generateHashedPassword();

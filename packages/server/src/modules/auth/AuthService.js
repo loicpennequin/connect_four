@@ -10,6 +10,7 @@ import config from '@root/config';
 import { withLog } from '@root/logger';
 import { UserSerializer } from '@root/modules/user';
 import errors, { serializeError } from '@root/modules/core/ErrorFactory';
+import { AuthSubscribers } from '@root/modules/auth/AuthSubscribers';
 
 export class AuthService {
   constructor({ userService, tokenService, webSocketService }) {
@@ -20,6 +21,7 @@ export class AuthService {
 
   @withLog()
   static initialize(container) {
+    new AuthSubscribers(container);
     passport.use(AuthService.createJwtStrategy(container));
     passport.serializeUser((user, done) => {
       done(null, user);
@@ -45,6 +47,7 @@ export class AuthService {
 
   @withLog()
   static async ensureAuthenticated(req, res, next, cb) {
+    // @TODO fais en une methode que t'utilises en default param sale gitan
     if (!cb) {
       cb = (err, user) => {
         if (err || !user) {
@@ -70,11 +73,12 @@ export class AuthService {
     const refreshToken = this.tokenService.generateRefreshToken();
 
     const updatedUser = await this.userService.update(user.id, {
+      isOnline: true,
       refreshToken
     });
 
-    this.webSocketService.broadcast(
-      constants.EVENTS.USER_LOGGED_IN,
+    this.webSocketService.broadcastToOthers(
+      constants.EVENTS.USER_ENTERED_LOBBY,
       UserSerializer.toDTO(updatedUser)
     );
 
@@ -100,7 +104,8 @@ export class AuthService {
   @withLog()
   async logout(userId) {
     const user = await this.userService.update(userId, {
-      refreshToken: null
+      refreshToken: null,
+      isOnline: false
     });
 
     this.webSocketService.broadcast(

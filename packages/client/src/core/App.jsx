@@ -6,10 +6,12 @@ import { ThemeProvider } from '@styles/ThemeProvider';
 import { AuthProvider } from '@root/auth/components/AuthProvider';
 import { routes } from '@root/pages';
 import { ToastProvider } from '@root/core/components/Toast';
+import { ReactQueryDevtools } from 'react-query-devtools';
 
 function App() {
   return (
     <Router>
+      <ReactQueryDevtools initialIsOpen={false} />
       <AuthProvider>
         <ThemeProvider>
           <ToastProvider>

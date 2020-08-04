@@ -6,6 +6,7 @@ export class UserSerializer {
       id: dto.id,
       username: dto.username,
       email: dto.email,
+      isOnline: dto.isOnline,
       createdAt: dto.createdAt
     }
   }

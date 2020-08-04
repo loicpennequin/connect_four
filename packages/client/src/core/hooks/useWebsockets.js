@@ -1,6 +1,8 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { webSocketApi } from '@root/core/api/webSocketApi';
 
+let _bindings = 0;
+
 export function useWebsockets() {
   const listeners = useRef([]);
 
@@ -11,10 +13,20 @@ export function useWebsockets() {
     };
   }, []);
 
+  useEffect(() => {
+    _bindings ++;
+    webSocketApi.connect();
+
+    return () => {
+      _bindings --;
+      if (_bindings <= 0) {
+        webSocketApi.disconnect();
+      }
+    }
+  }, []);
+
   return useMemo(() => {
     return {
-      connect: webSocketApi.connect.bind(webSocketApi),
-      disConnect: webSocketApi.disconnect.bind(webSocketApi),
       emit: webSocketApi.emit.bind(webSocketApi),
       on: (eventName, listener) => {
         listeners.current.push([eventName, listener]);

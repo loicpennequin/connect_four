@@ -2,17 +2,19 @@ import { useState, useEffect } from 'react';
 import { constants } from '@c4/shared';
 
 import { httpClient, REQUEST, RESPONSE_ERROR } from '@core/api/httpClient';
-import { AuthService } from '@root/auth/api/AuthService';
+import { AuthService } from '@auth/api/AuthService';
 import { useInterval } from '@core/hooks/useInterval';
+import { useCurrentUser } from '@user/hooks/useCurrentUser';
 
 export const AuthProvider = ({ children }) => {
-  const [ready, setReady] = useState(false);
-
+  const [getCurrentUserReady, setGetCurrentUserReady] = useState(false);
+  const currentUser = useCurrentUser(getCurrentUserReady);
+  
   useEffect(() => {
     httpClient.on(REQUEST, AuthService.onRequest);
     httpClient.on(RESPONSE_ERROR, AuthService.onResponseError);
   }, []);
-  
+
   useInterval(() => {
     if (AuthService.jwt) {
       AuthService.refreshJwt();
@@ -24,10 +26,10 @@ export const AuthProvider = ({ children }) => {
       try {
         await AuthService.refreshJwt();
       } finally {
-        setReady(true);
+        setGetCurrentUserReady(true);
       }
     })();
   }, []);
 
-  return ready ? children : null;
+  return currentUser.status !== "idle" ? children : 'Authenticating...';
 };

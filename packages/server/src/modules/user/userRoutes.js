@@ -7,7 +7,7 @@ const router = Router();
 
 const api = makeClassInvoker(UserController);
 
-router.get('/', api('findAll'));
+router.get('/', AuthService.ensureAuthenticated, api('findAll'));
 router.post('/', api('create'));
 router.get('/:id', AuthService.ensureAuthenticated, api('findById'));
 router.get(

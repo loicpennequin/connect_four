@@ -5,7 +5,7 @@ import { noop, isObject } from '@c4/shared';
 import logger, { withLog } from '@root/logger';
 import { AuthService } from '@root/modules/auth';
 
-const HEARTBEAT_INTERVAL = 15000;
+const HEARTBEAT_INTERVAL = 10000;
 
 export class WebSocketService {
   static initialize(container) {
@@ -23,6 +23,7 @@ export class WebSocketService {
       this._doHealthCheck.bind(this),
       HEARTBEAT_INTERVAL
     );
+    logger.info('Websocket Server listening.');
   }
 
   get clientIds() {
@@ -33,6 +34,7 @@ export class WebSocketService {
     this.wss.clients.forEach(ws => {
       if (!ws.isAlive) {
         logger.info(`client ${ws.clientId} not alive. Closing.`);
+        this
         return ws.terminate();
       }
 
@@ -43,12 +45,16 @@ export class WebSocketService {
 
   async _onConnect(ws, req) {
     const clientId = uuid();
-    logger.debug(`WS: connected: ${clientId}`);
+    logger.info(`WS: connected: ${clientId}`);
 
     const { token } = url.parse(req.url, true).query;
     req.headers.authorization = `Bearer ${token}`;
+    
     AuthService.ensureAuthenticated(req, null, null, (err, user) => {
-      if (err || !user) return ws.close();
+      if (err || !user) {
+        logger.warn('Unauthenticated socket connection. Terminating.');
+        return ws.close();
+      }
 
       ws.on('message', message => this._onMessage(ws, message));
       ws.on('close', () => this._onClientClose(ws));
@@ -60,6 +66,7 @@ export class WebSocketService {
       ws.isAlive = true;
       ws.userId = user.id;
       this.clients.set(clientId, ws);
+      this._onMessage(ws, '{"eventName": "connected"}');
       ws.send(this.createMessage('connected', { clientId }));
     });
   }
@@ -69,14 +76,23 @@ export class WebSocketService {
   }
 
   _onClientClose(ws) {
-    logger.debug(`WS: disconnected: ${ws.clientId}`);
+    logger.info(`WS: disconnected: ${ws.clientId}`);
     this._onMessage(ws, '{"eventName": "close"}');
     this.clients.delete(ws.clientId);
   }
 
+  _safeParse(message) {
+    try {
+      return JSON.parse(message);
+    } catch {
+      logger.error(`WS: unparsable message: ${message}`);
+      return {};
+    }
+  }
+
   _onMessage(ws, message) {
     logger.debug(`WS: new message: ${message}`);
-    const { eventName, data } = JSON.parse(message);
+    const { eventName, data } = this._safeParse(message);
     const listeners = this._listeners.get(eventName);
     if (!listeners) return;
     listeners.forEach(listener => listener(ws, data));
@@ -87,14 +103,7 @@ export class WebSocketService {
   }
 
   getSocketByUserId(userId) {
-    let socket;
-    this.clients.forEach(value => {
-      if (value.userId === id) {
-        socket = value;
-      }
-    });
-
-    return socket;
+    return [...this.clients.values()].find(client => client.userId === userId);
   }
 
   on(eventName, cb) {
@@ -113,13 +122,13 @@ export class WebSocketService {
 
   @withLog(true)
   emit(eventName, data, ...clientsOrClientIds) {
-    clientsOrClientIds.forEach(clientorClientId => {
+    clientsOrClientIds.forEach(clientOrClientId => {
       const ws = isObject(clientOrClientId)
-        ? ws
+        ? clientOrClientId
         : this.clients.get(clientOrClientId);
       if (!ws) {
         return logger.error(
-          `WS: Invalid client or clientId: ${clientorClientId}`
+          `WS: Invalid client or clientId: ${clientOrClientId}`
         );
       }
 
@@ -130,6 +139,14 @@ export class WebSocketService {
   @withLog(true)
   broadcast(eventName, data) {
     this.clients.forEach(client => {
+      client.send(this.createMessage(eventName, data));
+    });
+  }
+
+  @withLog(true)
+  broadcastToOthers(eventName, data, from) {
+    this.clients.forEach(client => {
+      if (client.userId === from) return;
       client.send(this.createMessage(eventName, data));
     });
   }

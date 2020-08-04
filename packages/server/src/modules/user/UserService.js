@@ -4,8 +4,8 @@ import { UserSerializer } from './UserSerializer';
 
 export class UserService {
   @withLog()
-  async findAll() {
-    return await User.query();
+  async findAll({ filter = {} } = {}) {
+    return await User.query().where(filter);
   }
 
   @withLog(true)
@@ -21,26 +21,28 @@ export class UserService {
   }
 
   @withLog(true)
-  async findById(id) {
-    return await User.query().findById(id).throwIfNotFound();
+  findById(id) {
+    return User.query()
+      .findById(id)
+      .throwIfNotFound();
   }
 
   @withLog(true)
-  async findByIds(ids) {
-    return await User.query()
+  findByIds(ids) {
+    return User.query()
       .findByIds(ids)
       .throwIfNotFound();
   }
 
   @withLog(true)
-  async create(data) {
-    return User.query().insert(UserSerializer.toPersistence(data));
+  create(data) {
+    return User.query().insertAndFetch(UserSerializer.toPersistence(data));
   }
 
   @withLog(true)
-  async update(id, data) {
-      return User.query()
-        .patchAndFetchById(id, UserSerializer.toPersistence(data))
-        .throwIfNotFound();
+  update(id, data) {
+    return User.query()
+      .patchAndFetchById(id, UserSerializer.toPersistence(data))
+      .throwIfNotFound();
   }
 }

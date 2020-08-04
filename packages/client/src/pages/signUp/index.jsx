@@ -5,7 +5,7 @@ import { useToast } from '@core/hooks/useToast';
 import { useHistory } from 'react-router';
 
 export default function SignInPage() {
-  const { createUser } = useUsers();
+  const { createUser } = useUsers({ lazy: true });
   const toast = useToast();
   const history = useHistory();
 

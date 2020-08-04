@@ -12,8 +12,9 @@ export class UserController {
 
   @withLog()
   @wrap()
-  async findAll(_req, res) {
-    const users = await this.userService.findAll();
+  async findAll(req, res) {
+    const filter = req.query.filter && JSON.parse(req.query.filter);
+    const users = await this.userService.findAll({ filter });
     res.send(users.map(UserSerializer.toDTO));
   }
 

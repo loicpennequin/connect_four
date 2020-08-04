@@ -88,19 +88,19 @@ export const wrapRequest = (defaultError = errors.unexpected()) => promise => {
   };
 };
 
-export const wrap = () => promise => {
+export const wrap = (error) => promise => {
   return async function wrapped(...args) {
     try {
       return await promise(...args);
     } catch (err) {
-      return handle(error);
+      return handle(error || err);
     }
   };
 };
 
 export const wrapRequestDecorator = (error = errors.unexpected()) => (
-  target,
-  key,
+  _target,
+  _key,
   descriptor
 ) => {
   const promise = descriptor.value;
@@ -110,7 +110,11 @@ export const wrapRequestDecorator = (error = errors.unexpected()) => (
   return descriptor;
 };
 
-export const wrapDecorator = () => (key, target, descriptor) => {
+export const wrapDecorator = (error) => (
+  key,
+  target,
+  descriptor
+) => {
   const promise = descriptor.value;
   descriptor.value = function decorated(...args) {
     return wrap(error)(promise.bind(this))(...args);
