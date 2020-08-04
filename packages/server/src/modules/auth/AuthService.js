@@ -77,11 +77,6 @@ export class AuthService {
       refreshToken
     });
 
-    this.webSocketService.broadcastToOthers(
-      constants.EVENTS.USER_ENTERED_LOBBY,
-      UserSerializer.toDTO(updatedUser)
-    );
-
     return { refreshToken, accessToken };
   }
 
@@ -107,10 +102,5 @@ export class AuthService {
       refreshToken: null,
       isOnline: false
     });
-
-    this.webSocketService.broadcast(
-      constants.EVENTS.USER_LOGGED_OFF,
-      UserSerializer.toDTO(user)
-    );
   }
 }

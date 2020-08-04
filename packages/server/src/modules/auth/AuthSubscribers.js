@@ -1,17 +1,15 @@
 import { constants } from '@c4/shared';
-import errors, { wrapDecorator as wrap } from '@root/modules/core/ErrorFactory';
+import { wrapDecorator as wrap } from '@root/modules/core/ErrorFactory';
 import { withLog } from '@root/logger';
+import { UserSerializer } from '@root/modules/user';
 
 export class AuthSubscribers {
   constructor(container) {
     this.websocketService = container.resolve('webSocketService');
     this.userService = container.resolve('userService');
 
-    this.websocketService.on(
-      constants.EVENTS.CLOSE,
-      this.onClose.bind(this)
-    );
-    
+    this.websocketService.on(constants.EVENTS.CLOSE, this.onClose.bind(this));
+
     this.websocketService.on(
       constants.EVENTS.CONNECTED,
       this.onConnected.bind(this)
@@ -22,7 +20,7 @@ export class AuthSubscribers {
   @wrap()
   async onClose(ws) {
     if (!ws.userId) return;
-    
+
     const user = await this.userService.findById(ws.userId);
     await this.userService.update(ws.userId, { isOnline: false });
     this.websocketService.broadcastToOthers(
@@ -36,10 +34,15 @@ export class AuthSubscribers {
   @wrap()
   async onConnected(ws) {
     if (!ws.userId) return;
-    
-    const user = await this.userService.findById(ws.userId);
+
+    let user = await this.userService.findById(ws.userId);
     if (!user.is_online) {
-      await this.userService.update(ws.userId, { isOnline: true });
+      user = await this.userService.update(ws.userId, { isOnline: true });
     }
+
+    this.websocketService.broadcastToOthers(
+      constants.EVENTS.USER_ENTERED_LOBBY,
+      UserSerializer.toDTO(user)
+    );
   }
 }

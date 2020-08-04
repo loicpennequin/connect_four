@@ -24,13 +24,16 @@ export class GameSubscribers {
     );
   }
 
+  @withLog(true)
   @wrap()
   async _defaultChallengeHandler({
     responseEventName,
     clientsToNotify,
     playerIds
   }) {
-    const [challenger, challenged] = (await this.userService.findByIds(playerIds)).map(UserSerializer.toDTO);
+    const [challenger, challenged] = (
+      await this.userService.findByIds(playerIds)
+    ).map(UserSerializer.toDTO);
 
     this.websocketService.emit(
       responseEventName,

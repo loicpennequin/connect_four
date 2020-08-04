@@ -7,6 +7,7 @@ import { AuthProvider } from '@root/auth/components/AuthProvider';
 import { routes } from '@root/pages';
 import { ToastProvider } from '@root/core/components/Toast';
 import { ReactQueryDevtools } from 'react-query-devtools';
+import { ChallengeProvider } from '@game/contexts/challengeContext';
 
 function App() {
   return (
@@ -15,12 +16,14 @@ function App() {
       <AuthProvider>
         <ThemeProvider>
           <ToastProvider>
-            <GlobalStyles />
-            <Switch>
-              {routes.map(route => (
-                <Route key={route.name} {...route} />
-              ))}
-            </Switch>
+            <ChallengeProvider>
+              <GlobalStyles />
+              <Switch>
+                {routes.map(route => (
+                  <Route key={route.name} {...route} />
+                ))}
+              </Switch>
+            </ChallengeProvider>
           </ToastProvider>
         </ThemeProvider>
       </AuthProvider>

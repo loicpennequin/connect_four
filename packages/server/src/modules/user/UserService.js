@@ -28,10 +28,13 @@ export class UserService {
   }
 
   @withLog(true)
-  findByIds(ids) {
-    return User.query()
+  async findByIds(ids) {
+    const users = await User.query()
       .findByIds(ids)
       .throwIfNotFound();
+    // Objections's .findById() doesn't guarantee The order of the returned items...
+    // Todo : extend Objection's QueryBuilder in the BaseModel to add a FindByIdsAndSort() method
+    return ids.map(id => users.find(user => user.id === id));
   }
 
   @withLog(true)
