@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { useChallenge } from '@game/hooks/useChallenge';
+import { lobbyContext } from '@root/game/contexts/lobbyContext';
 
 export function ConnectedUsersListItem({ user }) {
   const {
@@ -9,8 +10,9 @@ export function ConnectedUsersListItem({ user }) {
     declineChallenge,
     pendingChallenges
   } = useChallenge();
+  const { setIsGameLoading } = useContext(lobbyContext);
 
-  const isChallengable = useMemo(
+  const isChallengeable = useMemo(
     () =>
       pendingChallenges.every(
         challenge =>
@@ -32,10 +34,15 @@ export function ConnectedUsersListItem({ user }) {
     [user, pendingChallenges]
   );
 
+  const handleAccept = () => {
+    acceptChallenge(user.id);
+    setIsGameLoading(true);
+  };
+
   return (
     <div>
       <span>{user.username}</span>
-      {isChallengable && (
+      {isChallengeable && (
         <button onClick={() => initiateChallenge(user.id)}>Challenge</button>
       )}
       {isCancellable && (
@@ -44,7 +51,7 @@ export function ConnectedUsersListItem({ user }) {
 
       {isAnswerable && (
         <>
-          <button onClick={() => acceptChallenge(user.id)}>Accept</button>
+          <button onClick={handleAccept}>Accept</button>
           <button onClick={() => declineChallenge(user.id)}>Decline</button>
         </>
       )}

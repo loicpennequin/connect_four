@@ -80,12 +80,13 @@ export class GameSubscribers {
 
   @withLog()
   @wrap()
-  async onChallengeAccepted(ws, { challengerId, challengedId }) {
+  async onChallengeAccepted(_ws, { challengerId, challengedId }) {
     this._defaultChallengeHandler({
       responseEventName: constants.EVENTS.USER_ACCEPTED_CHALLENGE,
       clientsToNotify: [this.websocketService.getSocketByUserId(challengerId)],
       playerIds: [challengerId, challengedId]
     });
+
     this._pendingChallenges = this._pendingChallenges.filter(
       challenge =>
         !(
@@ -97,7 +98,7 @@ export class GameSubscribers {
 
   @withLog()
   @wrap()
-  async onChallengeRefused(ws, { challengerId, challengedId }) {
+  async onChallengeRefused(_ws, { challengerId, challengedId }) {
     this._defaultChallengeHandler({
       responseEventName: constants.EVENTS.USER_REFUSED_CHALLENGE,
       clientsToNotify: [this.websocketService.getSocketByUserId(challengerId)],
