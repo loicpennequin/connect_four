@@ -5,6 +5,7 @@ import { constants, noop } from '@c4/shared';
 import { useWebsockets } from '@core/hooks/useWebsockets';
 
 const { EVENTS } = constants;
+const CONNECTED_USER_LIST_UPDATE_DELAY = 1500;
 
 export function useUsers({
   lazy = false,
@@ -44,12 +45,10 @@ export function useUsers({
   useEffect(() => {
     const unsub = on(EVENTS.USER_LEFT_LOBBY, ({ id }) => {
       if (connectedUsers.isIdle || connectedUsers.isFetching) return;
-
-      queryCache.setQueryData('connectedUsers', oldUsers =>
-        oldUsers.filter(user => user.id !== id)
-      );
-
-      onUserLeft(id);
+      setTimeout(() => {
+        queryCache.invalidateQueries('connectedUsers');
+        onUserLeft(id);
+      }, CONNECTED_USER_LIST_UPDATE_DELAY);
     });
     return unsub;
   }, [on, onUserLeft, connectedUsers]);

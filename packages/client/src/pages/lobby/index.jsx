@@ -9,9 +9,9 @@ export default function LobbyPage() {
 
   return (
     <>
-      <div>
+      <h1>
         Hello, {currentUser.data?.username} (id: {currentUser.data.id})
-      </div>
+      </h1>
       <ConnectedUsersList />
       <button onClick={logout}>Sign off</button>
     </>

@@ -102,6 +102,7 @@ export class WebSocketService {
     return JSON.stringify({ eventName, data });
   }
 
+  @withLog(true)
   getSocketByUserId(userId) {
     return [...this.clients.values()].find(client => client.userId === userId);
   }

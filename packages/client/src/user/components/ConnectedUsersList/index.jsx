@@ -13,6 +13,8 @@ export function ConnectedUsersList() {
   );
 
   return !otherUsers ? null : (
+    <>
+      <h3>Connected Users</h3>
       <ul>
         {otherUsers.map(user => (
           <li key={user.id}>
@@ -20,5 +22,6 @@ export function ConnectedUsersList() {
           </li>
         ))}
       </ul>
+    </>
   );
 }
