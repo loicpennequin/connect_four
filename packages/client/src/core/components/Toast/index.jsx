@@ -31,7 +31,7 @@ export function ToastProvider({ children }) {
       setToasts(toasts => toasts.concat(toast));
       setTimeout(() => {
         clear(toast);
-      }, 4000);
+      }, 2000);
     },
     [clear]
   );

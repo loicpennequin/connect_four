@@ -55,7 +55,7 @@ export function SignInForm({ onSubmit }) {
 
       <button disabled={formState.isSubmitting}>Sign </button>
       <Link to="SignUp">I don't have an account</Link>
-      {generalError && <div>{generalError.message}</div>}
+      {generalError && <div>{generalError[0].message}</div>}
     </form>
   );
 }

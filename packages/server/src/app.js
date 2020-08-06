@@ -34,7 +34,10 @@ if (isProd) {
 } else {
   app.use(
     cors({
-      origin: config.WEBSITE_URL,
+      origin(origin, cb) {
+        if (config.WEBSITE_URLS.includes(origin)) cb(null, true);
+        else cb(new Error('CORS'))
+      },
       credentials: true
     })
   );

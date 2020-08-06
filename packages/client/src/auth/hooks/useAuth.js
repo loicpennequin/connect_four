@@ -5,6 +5,9 @@ export function useAuth() {
   const [login] = useMutation(AuthService.login, {
     onSuccess() {
       queryCache.invalidateQueries('currentUser');
+    },
+    onError(err) {
+      throw err;
     }
   });
 

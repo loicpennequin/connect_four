@@ -85,7 +85,7 @@ export function SignUpForm({ onSubmit }) {
       <Link to="Home">I already have an account</Link>
 
       <button disabled={formState.isSubmitting}>Sign up</button>
-      {generalError && <div>{generalError.message}</div>}
+      {generalError && <div>{generalError[0].message}</div>}
     </form>
   );
 }

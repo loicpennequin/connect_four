@@ -1,31 +1,31 @@
-import { gameApi } from '@root/game/api';
-import { useState, useEffect, useCallback } from 'react';
+import { useContext, useMemo } from 'react';
+import { currentGameContext } from '@game/contexts/currentGameContext';
+import { useCurrentUser } from '@user/hooks/useCurrentUser';
+import { useWebsockets } from '@core/hooks/useWebsockets';
+import { constants } from '@c4/shared';
+
+const { EVENTS } = constants;
 
 export function useGameApi() {
-  const [state, setState] = useState(gameApi.state);
+  const state = useContext(currentGameContext);
+  const { data: currentUser } = useCurrentUser();
 
-  useEffect(() => {
-    function onUpdate(newState) {
-      setState(Object.assign({}, newState));
-    }
-    gameApi.on('update', onUpdate);
+  const { emit } = useWebsockets();
 
-    return () => {
-      gameApi.off('update', onUpdate);
-    };
-  }, []);
-
-  const addChecker = useCallback(
-    column => {
-      if (state.winner) return;
-      gameApi.addChecker(column);
-    },
-    [state.winner]
+  const actions = useMemo(
+    () => ({
+      addChecker(column) {
+        emit(EVENTS.GAME_ACTION, {
+          column,
+          gameId: state.id,
+          player: currentUser.id
+        });
+      }
+    }),
+    [emit, currentUser.id, state.id]
   );
-
   return {
     state,
-    gameApi,
-    addChecker
+    actions
   };
 }

@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { useGameApi } from '@root/game/hooks/useGameApi';
 
-export default function Board() {
-  const { gameApi, addChecker, state } = useGameApi()
+export function Board({ boardState, onColumnClick }) {
   const [highlightedColumn, setHghlightedColumn] = useState(null);
+
+  const getCellColor = cell =>
+    cell.player === boardState.playerIds[0] ? 'orangered' : 'orange';
 
   return (
     <div>
-      <StyledBoard rows={gameApi.rows} columns={gameApi.columns}>
-        {state.board.map((column, i) =>
+      <StyledBoard rows={boardState.rows} columns={boardState.columns}>
+        {boardState.board.map((column, i) =>
           column.map((cell, j) => (
             <StyledCell
               key={`${i}${j}`}
               col={i + 1}
-              row={gameApi.rows - j}
-              onClick={() => addChecker(i)}
+              row={boardState.rows - j}
+              onClick={() => onColumnClick(i)}
               onMouseEnter={() => setHghlightedColumn(i)}
               onMouseLeave={() => setHghlightedColumn(null)}
-              className={highlightedColumn === i ? 'highlighted': ''}
+              className={highlightedColumn === i ? 'highlighted' : ''}
             >
               {cell && (
                 <StyledChecker
-                  player={cell.player}
-                  faded={state.winner && !cell.isWinningCell}
+                  $color={() => getCellColor(cell)}
+                  faded={boardState.winner && !cell.isWinningCell}
                 />
               )}
             </StyledCell>
@@ -62,7 +63,7 @@ const StyledBoard = styled.div`
     --cell-size: 4em;
   }
   &::after {
-    background: linear-gradient(130DEG, dodgerblue, navy);
+    background: linear-gradient(130deg, dodgerblue, navy);
     content: '';
     position: absolute;
     top: 0;
@@ -110,7 +111,7 @@ const StyledCell = styled.div`
 `;
 
 const StyledChecker = styled.div`
-  --bg-color: ${props => (props.player === 'a' ? 'orangeRed' : 'orange')};
+  --bg-color: ${props => props.$color};
   background-color: var(--bg-color);
   ${props => props.player && 'content: "";'}
   position: absolute;

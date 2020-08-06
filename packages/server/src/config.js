@@ -11,7 +11,7 @@ export default {
 
   ENV: process.env.NODE_ENV,
 
-  WEBSITE_URL: 'http://localhost:3000',
+  WEBSITE_URLS: ['http://localhost:3000', 'http://192.168.1.29:3000'],
 
   DB: dbConfig,
 
@@ -42,7 +42,7 @@ export default {
     MAXAGE: 7 * 24 * 60 * 60, // 1 week
     ISSUER: 'http://localhost:8000'
   },
-  
+
   RESET_PASSWORD: {
     EXPIRE: 1000 * 60 * 60 // 1 hour
   },

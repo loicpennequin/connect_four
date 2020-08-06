@@ -35,5 +35,12 @@ export const routes = [
     exact: true,
     component: pageComponentFactory(() => import('@root/pages/lobby')),
     authLevel: constants.AUTH_LEVELS.PRIVATE
-  }
+  },
+  {
+    name: 'Game',
+    path: '/game/:id',
+    exact: true,
+    component: pageComponentFactory(() => import('@root/pages/game')),
+    authLevel: constants.AUTH_LEVELS.PRIVATE
+  },
 ];

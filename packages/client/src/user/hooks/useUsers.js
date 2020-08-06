@@ -14,7 +14,11 @@ export function useUsers({
 } = {}) {
   const { on } = useWebsockets();
   const [connectedUsersEnabled, setConnectedUsersEnabled] = useState(false);
-  const createUser = useMutation(UserService.createUser);
+  const [createUser] = useMutation(UserService.createUser, {
+    onError(err) {
+      throw err;
+    }
+  });
 
   const connectedUsers = useQuery(
     'connectedUsers',

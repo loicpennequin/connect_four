@@ -2,11 +2,11 @@ import { withLog } from '@root/logger';
 import { Game } from './GameModel';
 import { GameSerializer } from './GameSerializer';
 import { GameSubscribers } from './GameSubscribers';
-import { constants } from '@c4/shared';
+import { GameRoom } from './GameRoom';
 
 export class GameService {
   static initialize(container) {
-    new GameSubscribers(container)
+    new GameSubscribers(container);
   }
 
   @withLog()
@@ -19,5 +19,12 @@ export class GameService {
   @withLog(true)
   async create(data) {
     return Game.query().insert(GameSerializer.toPersistence(data));
+  }
+
+  @withLog(true)
+  createGameInstance(...playerIds) {
+    new GameRoom({
+      playerIds
+    });
   }
 }

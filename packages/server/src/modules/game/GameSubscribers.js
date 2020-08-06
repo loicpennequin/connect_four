@@ -7,6 +7,7 @@ export class GameSubscribers {
   constructor(container) {
     this.websocketService = container.resolve('webSocketService');
     this.userService = container.resolve('userService');
+    this.gameService = container.resolve('gameService');
     this._pendingChallenges = [];
 
     this.websocketService.on(
@@ -94,6 +95,8 @@ export class GameSubscribers {
           challenge.challengedId === challengedId
         )
     );
+
+    this.gameService.createGameInstance(challengerId, challengedId);
   }
 
   @withLog()
