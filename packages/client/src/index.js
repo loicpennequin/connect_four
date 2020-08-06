@@ -1,3 +1,4 @@
+import 'inert-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '@root/core/App';

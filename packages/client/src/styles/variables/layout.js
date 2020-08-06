@@ -1,18 +1,18 @@
 export default {
     breakpoints: {
         mobile: {
-            max: '568px'
+            max: '768px'
         },
         tablet: {
-            min: '569px',
-            max: '1024px'
+            min: '769px',
+            max: '992px'
+        },
+        laptop: {
+            min: '993px',
+            max: '1299px'
         },
         desktop: {
-            min: '1025px',
-            max: '1399px'
-        },
-        hd: {
-            min: '1400px'
+            min: '1300px'
         }
     },
     zindexes: {

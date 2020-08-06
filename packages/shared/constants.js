@@ -31,5 +31,8 @@ export const constants = {
   },
   JWT: {
     MAXAGE: 15 * 60 // 15min
+  },
+  KEYS: {
+    ESCAPE: 27
   }
 };

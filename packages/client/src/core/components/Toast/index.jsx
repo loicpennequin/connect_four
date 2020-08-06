@@ -5,8 +5,10 @@ import React, {
   useMemo,
   createContext
 } from 'react';
-import styled from 'styled-components';
+import { Transition, TransitionGroup } from 'react-transition-group';
 import { createPortal } from 'react-dom';
+import styled from 'styled-components';
+import { isString } from '@c4/shared';
 import { spacing, color } from '@styles/mixins';
 
 const toastContainerNode = document.createElement('div');
@@ -18,6 +20,10 @@ toastContainerNode.style.zIndex = 9999;
 
 export const ToastContext = createContext(null);
 
+const defaultOptions = {
+  type: 'success'
+};
+
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
@@ -28,27 +34,22 @@ export function ToastProvider({ children }) {
 
   const show = useCallback(
     toast => {
+      if (isString(toast)) {
+        toast = {
+          ...defaultOptions,
+          text: toast
+        };
+      }
+      
       setToasts(toasts => toasts.concat(toast));
+
+      const timeout = toast.timeout || 2000;
+
       setTimeout(() => {
         clear(toast);
-      }, 2000);
+      }, timeout);
     },
     [clear]
-  );
-
-  const toastComponents = useMemo(
-    () =>
-      toasts.map((toast, i) => {
-        const inner =
-          typeof toast === 'string' ? <Toast>{toast}</Toast> : toast;
-
-        return (
-          <div key={i} onClick={() => clear(toast)}>
-            {inner}
-          </div>
-        );
-      }),
-    [clear, toasts]
   );
 
   const context = useMemo(() => {
@@ -57,7 +58,7 @@ export function ToastProvider({ children }) {
 
   return (
     <ToastContext.Provider value={context}>
-      <ToastPortal toasts={toastComponents} />
+      <ToastPortal toasts={toasts} />
       {children}
     </ToastContext.Provider>
   );
@@ -70,15 +71,52 @@ function ToastPortal({ toasts }) {
     }
   }, []);
 
-  return createPortal(toasts, toastContainerNode);
+  return createPortal(
+    <TransitionGroup>
+      {toasts.map((toast, i) => (
+        <Toast key={i} toast={toast} />
+      ))}
+    </TransitionGroup>,
+    toastContainerNode
+  );
 }
 
-export default function Toast({ children, ...props }) {
-  return <Wrapper {...props}>{children}</Wrapper>;
-}
+export const Toast = ({ children, toast,...props }) => {
+  const transitionDuration = 300;
+  return (
+    <Transition appear={true} timeout={transitionDuration} {...props}>
+      {state => (
+        <Wrapper state={state} transitionDuration={transitionDuration}>
+          {toast.text}
+        </Wrapper>
+      )}
+    </Transition>
+  );
+};
+
+const getTransitionStyles = state => {
+  if (state === 'entering')
+    return `
+    transform: translateX(100%);
+    opacity: 0;
+    `;
+
+  if (state === 'exiting')
+    return `
+    transform: translateY(-100%);
+    opacity: 0;
+    `;
+
+  return `
+    transform: none;
+    opacity: 1;
+  `;
+};
 
 const Wrapper = styled.div`
   background-color: ${color('success')};
   color: ${color('successInvert')};
   padding: ${spacing('md')};
+  ${props => getTransitionStyles(props.state)}
+  transition: all ${props => props.transitionDuration}ms;
 `;
