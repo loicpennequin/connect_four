@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Flex = styled.div`
+export const Flex = styled.div`
     display: flex;
     justify-content: ${props => props.justify};
     align-items: ${props => props.align};
@@ -14,5 +14,3 @@ Flex.defaultProps = {
     direction: 'row',
     wrap: 'wrap'
 };
-
-export default Flex;

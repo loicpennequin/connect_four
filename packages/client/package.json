@@ -5,6 +5,10 @@
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
     "@c4/shared": "^0.0.1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-regular-svg-icons": "^5.14.0",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/react-fontawesome": "^0.1.11",
     "@hookform/error-message": "0.0.3",
     "@hookform/resolvers": "^0.1.0",
     "@storybook/addon-a11y": "^5.3.14",
@@ -35,6 +39,7 @@
     "react-transition-group": "^4.4.1",
     "storybook-addon-jsx": "^7.1.14",
     "styled-components": "^5.0.1",
+    "uuid": "^8.3.0",
     "worker-loader": "^2.0.0",
     "yup": "^0.29.2"
   },

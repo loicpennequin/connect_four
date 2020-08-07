@@ -20,6 +20,7 @@ const makeCustomProperties = category => props => {
 };
 
 export const GlobalStyles = createGlobalStyle`
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
     ${normalize()}
     :root{
         ${makeCustomProperties('color')}

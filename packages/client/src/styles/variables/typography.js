@@ -1,7 +1,7 @@
 const ratio = 1.3;
 
 export default {
-    primary: 'Lato, Arial',
+    primary: '"Open Sans", Arial',
     secondary: 'Times New Roman',
     monospace: 'monospace',
     size: {

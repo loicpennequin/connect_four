@@ -36,7 +36,7 @@ if (isProd) {
     cors({
       origin(origin, cb) {
         if (config.WEBSITE_URLS.includes(origin)) cb(null, true);
-        else cb(new Error('CORS'))
+        else cb(new Error('CORS'));
       },
       credentials: true
     })

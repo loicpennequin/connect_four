@@ -7,7 +7,7 @@ export const currentGameContext = createContext(null);
 
 export function CurrentGameProvider({ children }) {
   const [gameState, setGameState] = useState(null);
-  const { on } = useWebsockets();
+  const { on } = useWebsockets({ connectOnMount: false});
 
   useEffect(() => {
     on(EVENTS.GAME_HAS_BEEN_CREATED, setGameState);

@@ -1,9 +1,15 @@
 import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers';
-import { Link } from '@core/components/Link';
 import * as yup from 'yup';
+
+import { Link } from '@core/components/Link';
+import { Surface } from '@core/components/Surface';
+import { TextInput } from '@core/components/TextInput';
+import { FormControl } from '@core/components/FormControl';
+import { FormError } from '@core/components/FormError';
+import { Button } from '@core/components/Button';
+import { Flex } from '@core/components/Flex';
 
 const schema = yup.object().shape({
   username: yup.string().required(),
@@ -35,27 +41,34 @@ export function SignInForm({ onSubmit }) {
   );
 
   return (
-    <form
-      noValidate
-      onSubmit={handleSubmit(submit)}
-      style={{ display: 'flex', flexDirection: 'column' }}
-    >
-      <label htmlFor="signin_username">Username</label>
-      <input id="signin_username" name="username" ref={register} />
-      <ErrorMessage errors={errors} name="username" />
-
-      <label htmlFor="create-user_password">Password</label>
-      <input
-        id="create-user_password"
-        name="password"
+    <Surface as="form" noValidate onSubmit={handleSubmit(submit)}>
+      <FormControl
+        name="username"
+        error={errors.username}
+        label="Username"
+        component={TextInput}
         ref={register}
-        type="password"
       />
-      <ErrorMessage errors={errors} name="password" />
+      <FormControl
+        type="password"
+        name="password"
+        error={errors.password}
+        label="Password"
+        component={TextInput}
+        ref={register}
+      />
 
-      <button disabled={formState.isSubmitting}>Sign </button>
-      <Link to="SignUp">I don't have an account</Link>
-      {generalError && <div>{generalError[0].message}</div>}
-    </form>
+      <Flex justify="center">
+        <FormError>{generalError?.[0]?.message}</FormError>
+      </Flex>
+      
+      <Flex justify="space-around" align="center">
+        <Link to="SignUp">I don't have an account</Link>
+        <Button cta disabled={formState.isSubmitting}>
+          Sign In
+        </Button>
+      </Flex>
+      
+    </Surface>
   );
 }

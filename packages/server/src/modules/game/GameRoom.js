@@ -127,7 +127,6 @@ export class GameRoom {
       );
 
     let hasWinner = false;
-    console.log(this.state.columns, this.state.rows)
     for (let col = 0; col < this.state.columns; col++) {
       for (let row = 0; row < this.state.rows; row++) {
         if (hasWinner) break;

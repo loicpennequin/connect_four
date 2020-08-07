@@ -57,19 +57,22 @@ class WebSocketApi {
 
   connect() {
     if (this.isConnected || this.isConnecting) return;
+        console.log('connect')
     this._ws = new WebSocket(this.serverUrl);
     this._ws.addEventListener('message', this._onMessage.bind(this));
     this._ws.addEventListener('open', this._onOpen.bind(this));
   }
 
   disconnect() {
+    console.log('disconnect')
     if (this.isConnected) {
       this._ws.close();
     }
   }
 
   emit(eventName, data) {
-    if (this._ws.readyState !== WebSocket.OPEN) {
+    console.log(eventName, this.isConnected)
+    if (!this.isConnected) {
       this._messageQueue.push({ eventName, data });
     } else {
       this.send(eventName, data);

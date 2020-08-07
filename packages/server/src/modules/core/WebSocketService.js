@@ -132,7 +132,6 @@ export class WebSocketService {
           `WS: Invalid client or clientId: ${clientOrClientId}`
         );
       }
-
       ws.send(this.createMessage(eventName, data));
     });
   }

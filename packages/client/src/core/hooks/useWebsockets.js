@@ -3,7 +3,8 @@ import { webSocketApi } from '@root/core/api/webSocketApi';
 
 let _bindings = 0;
 
-export function useWebsockets() {
+export function useWebsockets({connectOnMount = true } = {}) {
+  const connectOnMountRef = useRef(connectOnMount);
   const listeners = useRef([]);
 
   useEffect(() => {
@@ -15,7 +16,9 @@ export function useWebsockets() {
 
   useEffect(() => {
     _bindings ++;
-    webSocketApi.connect();
+    if (connectOnMountRef.current) {
+      webSocketApi.connect();
+    }
 
     return () => {
       _bindings --;

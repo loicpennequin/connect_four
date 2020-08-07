@@ -28,6 +28,12 @@ export default function mergeTheme(theme) {
         spacing,
         layout,
         font: typography,
+        borderRadius: {
+            sm: '6px',
+            md: '12px',
+            circle: '50%', 
+            pill: '99999px'
+        },
         color: {
             ...colors,
             ...colorVariations('success', successColor),

@@ -10,7 +10,7 @@ export function useGameApi() {
   const state = useContext(currentGameContext);
   const { data: currentUser } = useCurrentUser();
 
-  const { emit } = useWebsockets();
+  const { emit } = useWebsockets({ connectOnMount: false });
 
   const actions = useMemo(
     () => ({

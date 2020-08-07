@@ -12,7 +12,7 @@ export function useUsers({
   onUserJoined = noop,
   onUserLeft = noop
 } = {}) {
-  const { on } = useWebsockets();
+  const { on } = useWebsockets({ connectOnMount: false });
   const [connectedUsersEnabled, setConnectedUsersEnabled] = useState(false);
   const [createUser] = useMutation(UserService.createUser, {
     onError(err) {

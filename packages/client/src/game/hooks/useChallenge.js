@@ -16,7 +16,7 @@ export function useChallenge({
     challengeContext
   );
   const currentUser = useCurrentUser();
-  const { on, emit } = useWebsockets();
+  const { on, emit } = useWebsockets({ connectOnMount: false });
 
   const initiateChallenge = useCallback(
     challengedId => {
