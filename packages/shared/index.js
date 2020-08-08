@@ -1,2 +1,1 @@
-export { constants } from './constants';
-export * from './src'
+export * from './src';
