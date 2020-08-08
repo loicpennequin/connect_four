@@ -8,6 +8,7 @@ const MemoizedRoute = React.memo(BrowserRoute);
 
 export function Route({ authLevel, ...props }) {
   const currentUser = useCurrentUser();
+  
   if (isDefined(currentUser.data) && authLevel === constants.AUTH_LEVELS.PUBLIC_ONLY) {
     return <Redirect to={constants.PATHS.AUTHENTICATED_REDIRECT_PATH} />
   } else if (isUndefined(currentUser.data) && authLevel === constants.AUTH_LEVELS.PRIVATE) {

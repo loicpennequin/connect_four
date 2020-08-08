@@ -1,6 +1,8 @@
 import { v4 as uuid } from 'uuid';
 import { constants, isDefined, isUndefined } from '@c4/shared';
 import { container } from '@root/container';
+import { withLog } from '@root/logger';
+import { wrapDecorator as wrap } from '@root/modules/core/ErrorFactory';
 
 const { EVENTS } = constants;
 
@@ -12,11 +14,7 @@ export class GameRoom {
 
   constructor({ playerIds }) {
     this.websocketService = container.resolve('webSocketService');
-    this.clients = playerIds.map(id =>
-      this.websocketService.getSocketByUserId(id)
-    );
-    
-    
+
     this.state = {
       id: uuid(),
       playerIds,
@@ -34,8 +32,20 @@ export class GameRoom {
     );
 
     this.websocketService.on(EVENTS.GAME_ACTION, this.onGameAction.bind(this));
+    this.websocketService.on(
+      EVENTS.PLAYER_CONNECTED_TO_GAME,
+      this.onPlayerConnect.bind(this)
+    );
   }
 
+  get clients() {
+    return this.state.playerIds.map(id =>
+      this.websocketService.getSocketByUserId(id)
+    );
+  }
+
+  @withLog()
+  @wrap()
   onGameAction(_ws, data) {
     if (data.gameId !== this.state.id) return;
 
@@ -46,6 +56,14 @@ export class GameRoom {
     }
 
     this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
+  }
+
+  @withLog()
+  @wrap()
+  onPlayerConnect(ws, data) {
+    if (data.gameId !== this.state.id) return;
+    
+    this.websocketService.emit(EVENTS.PLAYER_CONNECTED_TO_GAME, this.state, ws);
   }
 
   _createBoard() {
@@ -74,7 +92,7 @@ export class GameRoom {
       this.state.currentPlayer = this.state.playerIds[0];
     }
   }
-  
+
   _updateWinner() {
     const boardState = this.state.board;
     const areEqual = (...values) => {
@@ -108,7 +126,7 @@ export class GameRoom {
         boardState[colStart][rowStart + 2],
         boardState[colStart][rowStart + 3]
       );
-    }
+    };
 
     const checkDiagonalLineDown = (colStart, rowStart) =>
       checkLine(

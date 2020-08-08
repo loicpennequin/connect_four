@@ -11,6 +11,7 @@ export function CurrentGameProvider({ children }) {
 
   useEffect(() => {
     on(EVENTS.GAME_HAS_BEEN_CREATED, setGameState);
+    on(EVENTS.PLAYER_CONNECTED_TO_GAME, setGameState);
     on(EVENTS.GAME_ACTION, setGameState);
   }, [on]);
   

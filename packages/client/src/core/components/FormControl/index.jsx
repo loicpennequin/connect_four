@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid';
 
 import { Flex } from '@core/components/Flex';
 import { Label } from '@core/components/Label';
-import { TextInput } from '@core/components/TextInput';
 import { FormError } from '@core/components/FormError';
 
 export const FormControl = forwardRef(
@@ -13,7 +12,7 @@ export const FormControl = forwardRef(
     return (
       <Flex direction="column">
         <Label htmlFor={id.current}>{label}</Label>
-        <TextInput {...props} name={name} ref={ref} id={id.current} />
+        <Component {...props} name={name} ref={ref} id={id.current} />
         <FormError>{error?.message}</FormError>
       </Flex>
     );

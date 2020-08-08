@@ -10,7 +10,7 @@ export function useGameApi() {
   const state = useContext(currentGameContext);
   const { data: currentUser } = useCurrentUser();
 
-  const { emit } = useWebsockets({ connectOnMount: false });
+  const { emit } = useWebsockets({ connectOnMount: true });
 
   const actions = useMemo(
     () => ({
@@ -20,9 +20,12 @@ export function useGameApi() {
           gameId: state.id,
           player: currentUser.id
         });
+      },
+      synchronizeState(gameId) {
+        emit(EVENTS.PLAYER_CONNECTED_TO_GAME, { gameId });
       }
     }),
-    [emit, currentUser.id, state.id]
+    [emit, currentUser, state]
   );
   return {
     state,

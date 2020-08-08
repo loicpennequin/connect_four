@@ -31,6 +31,6 @@ export const AuthProvider = ({ children }) => {
       }
     })();
   }, []);
-
-  return currentUser.status !== 'idle' ? children : 'Authenticating...';
+  
+  return currentUser.status === 'success' ? children : 'Authenticating...';
 };
