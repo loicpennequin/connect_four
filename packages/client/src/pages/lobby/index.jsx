@@ -1,12 +1,17 @@
 import React, { useCallback, useContext, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { constants } from '@c4/shared';
 
 import { useChallenge } from '@game/hooks/useChallenge';
 import { useHistory } from 'react-router';
 import { useWebsockets } from '@core/hooks/useWebsockets';
 
+import { spacing } from '@styles/mixins';
+
 import { Container } from '@core/components/Container';
+import { Flex } from '@core/components/Flex';
 import { Surface } from '@core/components/Surface';
 import { ConnectedUsersList } from '@user/components/ConnectedUsersList';
 import { lobbyContext } from '@root/game/contexts/lobbyContext';
@@ -34,7 +39,12 @@ export default function LobbyPage() {
     <Wrapper>
       <Surface>
         {isGameLoading ? (
-          <div>Starting your Game...</div>
+          <LoadingWrapper direction="column" align="center">
+            <Spinner>
+              <FontAwesomeIcon icon={faSpinner} size="2x" />
+            </Spinner>
+            <div>Starting your Game...</div>
+          </LoadingWrapper>
         ) : (
           <ConnectedUsersList />
         )}
@@ -48,4 +58,20 @@ const Wrapper = styled(Container)`
   & > * {
     flex-grow: 1;
   }
+`;
+
+const LoadingWrapper = styled(Flex)`
+  padding: ${spacing('lg')};
+`;
+
+const spin = keyframes`
+  from {
+    transform: none
+  } to {
+    transform: rotateZ(1turn);
+  }
+`;
+
+const Spinner = styled.div`
+  animation: ${spin} 1.5s linear infinite;
 `;

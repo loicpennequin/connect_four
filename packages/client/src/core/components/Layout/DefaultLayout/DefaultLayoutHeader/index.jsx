@@ -27,6 +27,7 @@ export function DefaultLayoutHeader() {
 
         {currentUser.data && (
           <Flex>
+            <Username>Hi, {currentUser.data.username}</Username>
             <HeaderLink as={Button} plain color="accent" onClick={logout}>
               <FontAwesomeIcon icon={faPowerOff} />
             </HeaderLink>
@@ -36,6 +37,10 @@ export function DefaultLayoutHeader() {
     </Header>
   );
 }
+
+const Username = styled.span`
+  margin-right: ${spacing('md')};
+`;
 
 const Header = styled.header`
   color: ${color('brandInvert')};
