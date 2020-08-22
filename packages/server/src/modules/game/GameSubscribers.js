@@ -30,6 +30,11 @@ export class GameSubscribers {
       this.onChallengeRefused.bind(this)
     );
 
+    this.websocketService.on(
+      constants.EVENTS.PLAYER_CONNECTED_TO_GAME,
+      this.onPlayerConnect.bind(this)
+    );
+
     this.websocketService.on(constants.EVENTS.CLOSE, this.onClosed.bind(this));
   }
 
@@ -158,5 +163,17 @@ export class GameSubscribers {
         })
       )
     ).filter(Boolean);
+  }
+
+  @withLog()
+  @wrap()
+  onPlayerConnect(ws, data) {
+    const rooms = this.gameService.constructor.gameRooms;
+    const room = rooms.find(r => r.state.id === data.gameId);
+    if (!room) {
+      this.websocketService.emit(constants.EVENTS.PLAYER_CONNECTED_TO_STALE_GAME, null, ws);
+    } else {
+      this.websocketService.emit(constants.EVENTS.PLAYER_CONNECTED_TO_GAME, room.state, ws);
+    }
   }
 }

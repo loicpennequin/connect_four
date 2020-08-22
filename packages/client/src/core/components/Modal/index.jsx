@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { getFocusableChildren } from '@c4/shared';
 import { color, spacing, zindex, mobileOnly } from '@styles/mixins';
+import { keys } from '@utils';
 import Flex from '@core/components/Flex';
 
 const modalRootElement = document.createElement('div');
@@ -77,7 +78,7 @@ const ContentWrapper = styled.div`
   max-width: 75%;
   background: ${color('surface')};
   padding: ${spacing('md')};
-  @media (${mobileOnly()}) {
+  @media (${mobileOnly}) {
     max-width: 100%;
   }
 `;

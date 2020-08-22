@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faPowerOff } from '@fortawesome/free-solid-svg-icons';
 
+import { useToast } from '@core/hooks/useToast';
 import { useAuth } from '@auth/hooks/useAuth';
 import { useCurrentUser } from '@user/hooks/useCurrentUser';
 
@@ -14,8 +15,17 @@ import { Flex } from '@core/components/Flex';
 
 export function DefaultLayoutHeader() {
   const { logout } = useAuth();
-  const currentUser = useCurrentUser();
+  const toast = useToast();
 
+  const currentUser = useCurrentUser();
+  const handleLogoutClick = async () => {
+    try {
+      await logout();
+      toast.show('You are now logged out.');
+    } catch (err) {
+      throw err;
+    }
+  };
   return (
     <Header>
       <Container as={Flex} align="center" justify="space-between">
@@ -28,7 +38,12 @@ export function DefaultLayoutHeader() {
         {currentUser.data && (
           <Flex>
             <Username>Hi, {currentUser.data.username}</Username>
-            <HeaderLink as={Button} plain color="accent" onClick={logout}>
+            <HeaderLink
+              as={Button}
+              plain
+              color="accent"
+              onClick={handleLogoutClick}
+            >
               <FontAwesomeIcon icon={faPowerOff} />
             </HeaderLink>
           </Flex>
@@ -53,6 +68,6 @@ const HeaderLink = styled(Link)`
   color: inherit;
   padding: 0;
   &:hover {
-    color: ${color('accent')}
+    color: ${color('accent')};
   }
 `;

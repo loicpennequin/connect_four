@@ -5,6 +5,8 @@ import { useUsers } from '@user/hooks/useUsers';
 import { useToast } from '@core/hooks/useToast';
 import { useHistory } from 'react-router';
 
+import { mobileOnly } from '@styles/mixins';
+
 import { Surface } from '@core/components/Surface';
 import { Flex } from '@core/components/Flex';
 
@@ -25,13 +27,19 @@ export default function SignInPage() {
 
   return (
     <Wrapper justify="center" align="center">
-      <Surface>
+      <Content>
         <SignUpForm onSubmit={handleSubmit} />
-      </Surface>
+      </Content>
     </Wrapper>
   );
 }
 
 const Wrapper = styled(Flex)`
   min-height: 100vh;
+`;
+
+const Content = styled(Surface)`
+  @media screen and (${mobileOnly}) {
+    align-self: stretch;
+  }
 `;

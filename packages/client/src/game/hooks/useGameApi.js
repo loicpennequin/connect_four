@@ -27,8 +27,8 @@ export function useGameApi() {
     }),
     [emit, currentUser, state]
   );
-  return {
+  return useMemo(() => ({
     state,
     actions
-  };
+  }), [actions, state]);
 }

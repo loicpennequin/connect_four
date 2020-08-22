@@ -6,7 +6,7 @@ export const Container = styled.div`
   margin-right: auto;
   max-width: 980px;
 
-  @media screen and (${mobileOnly()}) {
+  @media screen and (${mobileOnly}) {
     width: 100%;
     max-width: none;
   }

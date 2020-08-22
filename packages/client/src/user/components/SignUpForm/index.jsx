@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
 
-import { spacing } from '@styles/mixins';
+import { spacing, mobileOnly } from '@styles/mixins';
 
 import { Link } from '@core/components/Link';
 import { TextInput } from '@core/components/TextInput';
@@ -86,7 +86,7 @@ export function SignUpForm({ onSubmit }) {
         type="password"
         name="passwordConfirm"
         error={errors.passwordConfirm}
-        label="Password"
+        label="Confirm your password"
         component={TextInput}
         ref={register}
       />
@@ -97,17 +97,23 @@ export function SignUpForm({ onSubmit }) {
 
       <ActionBar justify="space-around" align="center">
         <Link to="Home">I already have an account</Link>
-        <Button cta disabled={formState.isSubmitting}>
+        <SubmitButton cta disabled={formState.isSubmitting}>
           Sign Up
-        </Button>
+        </SubmitButton>
       </ActionBar>
     </form>
   );
 }
 
-
 const ActionBar = styled(Flex)`
   & > * {
     margin: ${spacing('sm')};
+  }
+`;
+
+const SubmitButton = styled(Button)`
+  @media screen and (${mobileOnly}) {
+    order: -1;
+    width: 100%;
   }
 `;

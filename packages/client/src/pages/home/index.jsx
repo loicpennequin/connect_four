@@ -1,10 +1,12 @@
 import React from 'react';
-  import { SignInForm } from '@auth/components/SignInForm';
+import styled from 'styled-components';
+import { SignInForm } from '@auth/components/SignInForm';
 import { useAuth } from '@auth/hooks/useAuth';
 import { useToast } from '@core/hooks/useToast';
 
 import { Flex } from '@core/components/Flex';
 import { Surface } from '@core/components/Surface';
+import { mobileOnly } from '@styles/mixins';
 
 export default function HomePage() {
   const { login } = useAuth();
@@ -21,10 +23,15 @@ export default function HomePage() {
 
   return (
     <Flex justify="center" align="center">
-      <Surface>
+      <Content>
         <SignInForm onSubmit={handleSubmit} />
-      </Surface>
+      </Content>
     </Flex>
   );
 }
 
+const Content = styled(Surface)`
+  @media screen and (${mobileOnly}) {
+    align-self: stretch;
+  }
+`;

@@ -1,5 +1,6 @@
 import React, { useMemo, useContext } from 'react';
 import styled from 'styled-components';
+import { Transition } from 'react-transition-group';
 
 import { useChallenge } from '@game/hooks/useChallenge';
 import { lobbyContext } from '@root/game/contexts/lobbyContext';
@@ -8,7 +9,7 @@ import { spacing, color } from '@styles/mixins';
 import { Button } from '@core/components/Button';
 import { Flex } from '@core/components/Flex';
 
-export function ConnectedUsersListItem({ user }) {
+export function ConnectedUsersListItem({ user, ...props }) {
   const {
     initiateChallenge,
     cancelChallenge,
@@ -17,6 +18,7 @@ export function ConnectedUsersListItem({ user }) {
     pendingChallenges
   } = useChallenge();
   const { setIsGameLoading } = useContext(lobbyContext);
+  const transitionDuration = 300;
 
   const isChallengeable = useMemo(
     () =>
@@ -46,42 +48,67 @@ export function ConnectedUsersListItem({ user }) {
   };
 
   return (
-    <Wrapper>
-      <span>{user.username}</span>
-      <ActionList>
-        {isChallengeable && (
-          <Button variant="accent" onClick={() => initiateChallenge(user.id)}>
-            Challenge
-          </Button>
-        )}
+    <Transition appear={true} timeout={transitionDuration} {...props}>
+      {state => (
+        <Wrapper state={state} transitionDuration={transitionDuration}>
+          <span>{user.username}</span>
+          <ActionList>
+            {isChallengeable && (
+              <Button
+                variant="accent"
+                onClick={() => initiateChallenge(user.id)}
+              >
+                Challenge
+              </Button>
+            )}
 
-        {isCancellable && (
-          <Button variant="danger" onClick={() => cancelChallenge(user.id)}>
-            Cancel
-          </Button>
-        )}
+            {isCancellable && (
+              <Button variant="danger" onClick={() => cancelChallenge(user.id)}>
+                Cancel
+              </Button>
+            )}
 
-        {isAnswerable && (
-          <>
-            <Button variant="success" onClick={handleAccept}>
-              Accept
-            </Button>
-            <Button variant="danger" onClick={() => declineChallenge(user.id)}>
-              Decline
-            </Button>
-          </>
-        )}
-      </ActionList>
-    </Wrapper>
+            {isAnswerable && (
+              <>
+                <Button variant="success" onClick={handleAccept}>
+                  Accept
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => declineChallenge(user.id)}
+                >
+                  Decline
+                </Button>
+              </>
+            )}
+          </ActionList>
+        </Wrapper>
+      )}
+    </Transition>
   );
 }
 
-const Wrapper = styled.div`
+const getTransitionStyles = state => {
+  if (['entering', 'exiting'].includes(state))
+    return `
+    transform: translateY(33%);
+    opacity: 0;
+    `;
+
+  return `
+    transform: none;
+    opacity: 1;
+  `;
+};
+
+const Wrapper = styled.li`
   padding: ${spacing('sm')} 0;
   color: ${color('brand')};
   display: grid;
   grid-template-columns: 2fr 1fr;
   align-items: center;
+  transition: all ${props => props.transitionDuration}ms;
+  ${props => getTransitionStyles(props.state)}
 `;
 
 const ActionList = styled(Flex)`

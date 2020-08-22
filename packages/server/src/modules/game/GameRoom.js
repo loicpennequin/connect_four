@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { constants, isDefined, isUndefined } from '@c4/shared';
+import { constants, isDefined } from '@c4/shared';
 import { container } from '@root/container';
 import { withLog } from '@root/logger';
 import { wrapDecorator as wrap } from '@root/modules/core/ErrorFactory';
@@ -32,10 +32,6 @@ export class GameRoom {
     );
 
     this.websocketService.on(EVENTS.GAME_ACTION, this.onGameAction.bind(this));
-    this.websocketService.on(
-      EVENTS.PLAYER_CONNECTED_TO_GAME,
-      this.onPlayerConnect.bind(this)
-    );
   }
 
   get clients() {
@@ -56,14 +52,6 @@ export class GameRoom {
     }
 
     this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
-  }
-
-  @withLog()
-  @wrap()
-  onPlayerConnect(ws, data) {
-    if (data.gameId !== this.state.id) return;
-    
-    this.websocketService.emit(EVENTS.PLAYER_CONNECTED_TO_GAME, this.state, ws);
   }
 
   _createBoard() {

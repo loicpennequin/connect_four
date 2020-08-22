@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  useContext,
   createContext
 } from 'react';
 import { Transition, TransitionGroup } from 'react-transition-group';
@@ -38,8 +39,8 @@ export function ToastProvider({ children }) {
     toast => {
       toast = {
         ...defaultOptions,
-        ...isString(toast) ? { text: toast } : toast
-      }
+        ...(isString(toast) ? { text: toast } : toast)
+      };
 
       setToasts(toasts => toasts.concat(toast));
 
@@ -70,23 +71,30 @@ function ToastPortal({ toasts }) {
   }, []);
 
   return createPortal(
-    <TransitionGroup>
+    <ToastList>
       {toasts.map((toast, i) => (
         <Toast key={i} toast={toast} />
       ))}
-    </TransitionGroup>,
+    </ToastList>,
     toastContainerNode
   );
 }
 
+const ToastList = styled(TransitionGroup)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`
 export const Toast = ({ children, toast, ...props }) => {
   const transitionDuration = 300;
   const { text, ...toastProps } = toast;
+  const { clear } = useContext(ToastContext);
 
   return (
     <Transition appear={true} timeout={transitionDuration} {...props}>
       {state => (
         <Wrapper
+          onClick={() => clear(toast)}
           state={state}
           transitionDuration={transitionDuration}
           {...toastProps}
@@ -122,6 +130,8 @@ const Wrapper = styled.div`
   color: ${props => props.theme.color[props.type + 'Invert']};
   font-weight: ${fontWeight('bold')};
   padding: ${spacing('md')};
+  margin: ${spacing('sm')};
   transition: all ${props => props.transitionDuration}ms;
+  width: fit-content;
   ${props => getTransitionStyles(props.state)}
 `;

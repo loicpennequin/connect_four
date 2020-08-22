@@ -23,7 +23,7 @@ const BaseButton = styled.button`
     props.cta &&
     `
     min-width: 10em;
-    font-size: ${fontSize('lg')(props)};
+    font-size: ${fontSize('lg')};
     `}
 
   &:hover {

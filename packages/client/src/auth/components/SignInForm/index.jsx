@@ -13,6 +13,7 @@ import { FormControl } from '@core/components/FormControl';
 import { FormError } from '@core/components/FormError';
 import { Button } from '@core/components/Button';
 import { Flex } from '@core/components/Flex';
+import { mobileOnly } from '@styles/mixins';
 
 const schema = yup.object().shape({
   username: yup.string().required('Please provide your username.'),
@@ -76,9 +77,9 @@ export function SignInForm({ onSubmit }) {
 
       <ActionBar justify="space-around" align="center">
         <Link to="SignUp">I don't have an account</Link>
-        <Button cta disabled={formState.isSubmitting}>
+        <SubmitButton cta disabled={formState.isSubmitting} type="submit">
           Sign In
-        </Button>
+        </SubmitButton>
       </ActionBar>
     </form>
   );
@@ -89,3 +90,10 @@ const ActionBar = styled(Flex)`
     margin: ${spacing('sm')};
   }
 `;
+
+const SubmitButton = styled(Button)`
+  @media screen and (${mobileOnly}) {
+    order: -1;
+    width: 100%;
+  }
+`

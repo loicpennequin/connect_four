@@ -5,6 +5,8 @@ import { GameSubscribers } from './GameSubscribers';
 import { GameRoom } from './GameRoom';
 
 export class GameService {
+  static gameRooms = [];
+  
   static initialize(container) {
     new GameSubscribers(container);
   }
@@ -22,9 +24,10 @@ export class GameService {
   }
 
   @withLog(true)
-  createGameInstance(...playerIds) {
-    new GameRoom({
+    createGameInstance(...playerIds) {
+    const room = new GameRoom({
       playerIds
     });
+    this.constructor.gameRooms.push(room);
   }
 }

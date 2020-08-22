@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import { TransitionGroup } from 'react-transition-group';
 import { useCurrentUser } from '@root/user/hooks/useCurrentUser';
 import { useUsers } from '@root/user/hooks/useUsers';
 
@@ -20,22 +21,23 @@ export function ConnectedUsersList() {
     <Wrapper>
       <Title>Connected Users</Title>
       {otherUsers.length <= 0 && (
-        <div>There are no other users connected at the moment. Come back later !</div>
+        <div>
+          There are no other users connected at the moment. Maybe wait for a bit
+          or come back later !
+        </div>
       )}
-      <ul>
+      <TransitionGroup component="ul">
         {otherUsers.map(user => (
-          <li key={user.id}>
-            <ConnectedUsersListItem user={user} />
-          </li>
+          <ConnectedUsersListItem key={user.id} user={user} />
         ))}
-      </ul>
+      </TransitionGroup>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
   padding: ${spacing('sm')};
-`
+`;
 const Title = styled.h3`
   margin-top: 0;
 `;
