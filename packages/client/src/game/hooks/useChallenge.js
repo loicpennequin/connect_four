@@ -25,7 +25,7 @@ export function useChallenge({
       emit(EVENTS.USER_INITIATED_CHALLENGE, data);
       setPendingChallenges(challenges => challenges.concat(data));
     },
-    [emit, currentUser.data.id, pendingChallenges, setPendingChallenges]
+    [emit, currentUser.data, pendingChallenges, setPendingChallenges]
   );
 
   const cancelChallenge = useCallback(
@@ -38,7 +38,7 @@ export function useChallenge({
         challenges.filter(c => c.challengedId !== challengedId)
       );
     },
-    [emit, currentUser.data.id, setPendingChallenges]
+    [emit, currentUser.data, setPendingChallenges]
   );
 
   const acceptChallenge = useCallback(
@@ -51,7 +51,7 @@ export function useChallenge({
         challenges.filter(c => c.challengerId !== challengerId)
       );
     },
-    [emit, currentUser.data.id, setPendingChallenges]
+    [emit, currentUser.data, setPendingChallenges]
   );
 
   const declineChallenge = useCallback(
@@ -65,7 +65,7 @@ export function useChallenge({
         challenges.filter(c => c.challengerId !== challengerId)
       );
     },
-    [emit, currentUser.data.id, setPendingChallenges]
+    [emit, currentUser.data, setPendingChallenges]
   );
 
   useEffect(() => {

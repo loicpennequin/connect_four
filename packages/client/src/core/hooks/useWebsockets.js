@@ -1,11 +1,12 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { webSocketApi } from '@root/core/api/webSocketApi';
-
+import { useCurrentUser } from '@user/hooks/useCurrentUser';
 let _bindings = 0;
 
-export function useWebsockets({connectOnMount = true } = {}) {
+export function useWebsockets({ connectOnMount = true } = {}) {
   const connectOnMountRef = useRef(connectOnMount);
   const listeners = useRef([]);
+  const { data: currentUser } = useCurrentUser(false);
 
   useEffect(() => {
     return function cleanup() {
@@ -15,18 +16,20 @@ export function useWebsockets({connectOnMount = true } = {}) {
   }, []);
 
   useEffect(() => {
-    _bindings ++;
+    if (!currentUser) return;
+
+    _bindings++;
     if (connectOnMountRef.current) {
       webSocketApi.connect();
     }
 
     return () => {
-      _bindings --;
+      _bindings--;
       if (_bindings <= 0) {
         webSocketApi.disconnect();
       }
-    }
-  }, []);
+    };
+  }, [currentUser]);
 
   return useMemo(() => {
     return {
@@ -34,7 +37,9 @@ export function useWebsockets({connectOnMount = true } = {}) {
       on: (eventName, listener) => {
         listeners.current.push([eventName, listener]);
         return webSocketApi.on(eventName, listener);
-      }
+      },
+      connect: webSocketApi.connect,
+      disconnect: webSocketApi.disconnect
     };
   }, []);
 }

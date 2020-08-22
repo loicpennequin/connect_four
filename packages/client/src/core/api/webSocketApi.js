@@ -77,7 +77,6 @@ class WebSocketApi {
   }
 
   on(eventName, cb) {
-    console.log('ON', eventName)
     if (!this._listeners.has(eventName)) {
       this._listeners.set(eventName, [cb]);
     } else {
@@ -96,7 +95,6 @@ class WebSocketApi {
   }
   
   off(eventName, cb) {
-    console.log('OFF', eventName)
     if (!this._listeners.has(eventName)) return;
     
     this._listeners.set(
