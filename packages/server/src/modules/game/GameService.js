@@ -6,7 +6,7 @@ import { GameRoom } from './GameRoom';
 
 export class GameService {
   static gameRooms = [];
-  
+
   static initialize(container) {
     new GameSubscribers(container);
   }
@@ -24,10 +24,17 @@ export class GameService {
   }
 
   @withLog(true)
-    createGameInstance(...playerIds) {
+  createGameInstance(...playerIds) {
     const room = new GameRoom({
       playerIds
     });
     this.constructor.gameRooms.push(room);
+  }
+
+  @withLog(true)
+  removeGameInstance(gameId) {
+    this.constructor.gameRooms = this.constructor.gameRooms.filter(
+      room => room.state.id !== gameId
+    );
   }
 }

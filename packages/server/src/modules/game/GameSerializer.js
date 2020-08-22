@@ -1,8 +1,6 @@
 import { removeEmptyKeys } from '@c4/shared';
-import { withLog } from '@root/logger';
 
 export class GameSerializer {
-  @withLog()
   static toDTO(data) {
     return removeEmptyKeys({
       user1Id: data.user1_id,
@@ -13,12 +11,11 @@ export class GameSerializer {
     });
   }
 
-  @withLog()
   static toPersistence(data) {
     return removeEmptyKeys({
-      user1_Id: data.user1Id,
-      user2_Id: data.user2Id,
-      winner_Id: data.winnerId
+      user1_id: data.user1Id,
+      user2_id: data.user2Id,
+      winner_id: data.winnerId
     });
   }
 }

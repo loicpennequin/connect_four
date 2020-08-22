@@ -1,11 +1,10 @@
 import Joi from '@hapi/joi';
 
 import { BaseModel } from '@root/modules/core';
-import { withLog } from '@root/logger';
 
 export class Game extends BaseModel {
   static get tableName() {
-    return 'user';
+    return 'game';
   }
 
   get validationSchema() {

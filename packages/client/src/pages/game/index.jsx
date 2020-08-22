@@ -7,6 +7,8 @@ import { useCurrentUser } from '@user/hooks/useCurrentUser';
 import { useToast } from '@core/hooks/useToast';
 
 import { Board } from '@game/components/Board';
+import { GameOverModal } from '@game/components/GameOverModal';
+import { Link } from '@core/components/Link';
 import { Container } from '@core/components/Container';
 
 export default function GamePage() {
@@ -33,8 +35,12 @@ export default function GamePage() {
 
   return (
     <Container>
+      <GameOverModal />
       {state.isStale ? (
+        <>
         <div>This game is already finished or does not exist.</div>
+        <Link to="Lobby">Back to lobby</Link>
+        </>
       ) : (
         <Board boardState={state} onColumnClick={handleColumnClick} />
       )}

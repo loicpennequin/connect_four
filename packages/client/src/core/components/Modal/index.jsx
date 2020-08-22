@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import { getFocusableChildren } from '@c4/shared';
 import { color, spacing, zindex, mobileOnly } from '@styles/mixins';
 import { keys } from '@utils';
-import Flex from '@core/components/Flex';
+
+import { Flex } from '@core/components/Flex';
+import { Button } from '@core/components/Button';
 
 const modalRootElement = document.createElement('div');
 modalRootElement.id = 'modal-root';
@@ -37,7 +39,7 @@ export function Modal({ children, isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       const focusable = getFocusableChildren(modalContentElement.current);
-      focusable[0].focus();
+      focusable[0]?.focus?.();
       appElement.current.setAttribute('aria-hidden', true);
       appElement.current.setAttribute('inert', true);
       window.addEventListener('keyup', handleKeyUp);
@@ -52,7 +54,7 @@ export function Modal({ children, isOpen, onClose }) {
 
   return createPortal(
     <ModalContainer onClick={onClose} justify="center" align="center">
-      <CloseButton onClick={onClose}>X</CloseButton>
+      <CloseButton onClick={onClose} plain>X</CloseButton>
       <ContentWrapper
         ref={modalContentElement}
         onClick={e => e.stopPropagation()}
@@ -83,7 +85,7 @@ const ContentWrapper = styled.div`
   }
 `;
 
-const CloseButton = styled.button`
+const CloseButton = styled(Button)`
   position: absolute;
   top: 0;
   right: 0;

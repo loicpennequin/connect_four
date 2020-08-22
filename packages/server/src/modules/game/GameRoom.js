@@ -14,6 +14,7 @@ export class GameRoom {
 
   constructor({ playerIds }) {
     this.websocketService = container.resolve('webSocketService');
+    this.gameService = container.resolve('gameService');
 
     this.state = {
       id: uuid(),
@@ -42,16 +43,26 @@ export class GameRoom {
 
   @withLog()
   @wrap()
-  onGameAction(_ws, data) {
+  async onGameAction(_ws, data) {
     if (data.gameId !== this.state.id) return;
 
     this._updateBoard(data.column);
     this._updateWinner();
     if (!this.state.winner) {
       this._updateCurrentPlayer();
+      this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
+    } else {
+      this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
+      await this.gameService.create({
+        user1Id: this.state.playerIds[0],
+        user2Id: this.state.playerIds[1],
+        winnerId: this.state.winner
+      });
+
+      this.websocketService.emit(EVENTS.GAME_HAS_FINISHED, this.state, ...this.clients);
+      this.gameService.removeGameInstance(this.state.id);
     }
 
-    this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
   }
 
   _createBoard() {
