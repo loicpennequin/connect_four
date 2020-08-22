@@ -5,7 +5,7 @@ export default {
     deepOrange: 'hsla(20, 75%, 50%, 1)',
     yellow: 'hsla(40, 85%, 70%, 1)',
     lime: 'hsla(85, 65%, 58%, 1)',
-    green: 'hsla(130, 60%, 60%, 1)',
+    green: 'hsla(130, 60%, 55%, 1)',
     darkGreen: 'hsla(130, 65%, 35%, 1)',
     teal: 'hsla(165, 70%, 50%,1)',
     cyan: 'hsla(195, 90%, 70%,1)',

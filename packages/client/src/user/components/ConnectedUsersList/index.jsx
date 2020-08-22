@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import styled from 'styled-components';
 import { useCurrentUser } from '@root/user/hooks/useCurrentUser';
 import { useUsers } from '@root/user/hooks/useUsers';
 
@@ -13,10 +14,13 @@ export function ConnectedUsersList() {
       connectedUsers.data?.filter?.(user => user.id !== currentUser.data?.id),
     [currentUser.data, connectedUsers.data]
   );
-  
-  return !otherUsers ? null : (
+
+  return !connectedUsers.data ? null : (
     <>
-      <h3>Connected Users</h3>
+      <Title>Connected Users</Title>
+      {otherUsers.length <= 0 && (
+        <div>There are no other users connected at the moment.</div>
+      )}
       <ul>
         {otherUsers.map(user => (
           <li key={user.id}>
@@ -27,3 +31,7 @@ export function ConnectedUsersList() {
     </>
   );
 }
+
+const Title = styled.h3`
+  margin-top: 0;
+`;

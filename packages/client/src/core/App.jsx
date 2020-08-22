@@ -1,10 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
-import { Route } from '@root/core/components/Route';
+import { ReactQueryDevtools } from 'react-query-devtools';
 import { GlobalStyles } from '@root/core/GlobalStyles';
 import { routes } from '@root/pages';
-import { ReactQueryDevtools } from 'react-query-devtools';
+
+import { Route } from '@root/core/components/Route';
 import { Store } from '@core/components/Store';
+import { Layout } from '@core/components/Layout';
 
 function App() {
   return (
@@ -12,11 +14,13 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <Store>
         <GlobalStyles />
-        <Switch>
-          {routes.map(route => (
-            <Route key={route.name} {...route} />
-          ))}
-        </Switch>
+        <Layout>
+          <Switch>
+            {routes.map(route => (
+              <Route key={route.name} {...route} />
+            ))}
+          </Switch>
+        </Layout>
       </Store>
     </Router>
   );

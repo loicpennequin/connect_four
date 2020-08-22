@@ -7,6 +7,7 @@ export default mergeTheme({
         accent: colors.blue,
         text: colors.black,
         background: colors.ultraLightGrey,
-        surface: colors.white
+        surface: colors.white,
+        successInvert: colors.white
     }
 });

@@ -9,10 +9,10 @@ function colorVariations(prefix, baseColor) {
             colors.black,
             colors.white
         ),
-        [`${prefix}Light`]: lighten(0.2, baseColor),
-        [`${prefix}Lighter`]: lighten(0.4, baseColor),
-        [`${prefix}Dark`]: darken(0.2, baseColor),
-        [`${prefix}Darker`]: darken(0.4, baseColor),
+        [`${prefix}Light`]: lighten(0.15, baseColor),
+        [`${prefix}Lighter`]: lighten(0.3, baseColor),
+        [`${prefix}Dark`]: darken(0.15, baseColor),
+        [`${prefix}Darker`]: darken(0.3, baseColor),
         [`${prefix}Half`]: transparentize(0.7, baseColor)
     };
 }

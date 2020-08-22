@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
-import { getFocusableChildren, constants } from '@c4/shared';
+import { getFocusableChildren } from '@c4/shared';
 import { color, spacing, zindex, mobileOnly } from '@styles/mixins';
 import Flex from '@core/components/Flex';
 
-const { KEYS } = constants;
 const modalRootElement = document.createElement('div');
-modalDOMElement.id = 'modal-root';
+modalRootElement.id = 'modal-root';
 
 export function Modal({ children, isOpen, onClose }) {
   const appElement = useRef(document.getElementById('root'));
@@ -60,7 +59,7 @@ export function Modal({ children, isOpen, onClose }) {
         {children}
       </ContentWrapper>
     </ModalContainer>,
-    modalDOMElement
+    modalRootElement
   );
 }
 
@@ -78,7 +77,7 @@ const ContentWrapper = styled.div`
   max-width: 75%;
   background: ${color('surface')};
   padding: ${spacing('md')};
-  @media ${mobileOnly()} {
+  @media (${mobileOnly()}) {
     max-width: 100%;
   }
 `;

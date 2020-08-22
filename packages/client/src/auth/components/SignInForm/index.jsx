@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
+
+import { isArray } from '@c4/shared';
 
 import { spacing } from '@styles/mixins';
 import { Link } from '@core/components/Link';
@@ -31,7 +33,8 @@ export function SignInForm({ onSubmit }) {
       try {
         await onSubmit(values);
       } catch (err) {
-        setGeneralError(err);
+        if (isArray(err)) setGeneralError(err[0]);
+        else setGeneralError(err);
 
         err?.additional?.violations.forEach(error => {
           setError(error.field, error);
@@ -40,6 +43,14 @@ export function SignInForm({ onSubmit }) {
     },
     [onSubmit, setError]
   );
+
+  const generalErrorMessage = useMemo(() => {
+    if (!generalError) return null;
+    if (generalError.statusCode === 401)
+      return 'Your username or password is incorrect. Please try again.';
+
+    return generalError.message;
+  }, [generalError]);
 
   return (
     <form noValidate onSubmit={handleSubmit(submit)}>
@@ -60,21 +71,21 @@ export function SignInForm({ onSubmit }) {
       />
 
       <Flex justify="center">
-        <FormError>{generalError?.[0]?.message}</FormError>
+        <FormError>{generalErrorMessage}</FormError>
       </Flex>
-      
+
       <ActionBar justify="space-around" align="center">
         <Link to="SignUp">I don't have an account</Link>
         <Button cta disabled={formState.isSubmitting}>
           Sign In
         </Button>
-      </ActionBar>    
+      </ActionBar>
     </form>
   );
 }
 
 const ActionBar = styled(Flex)`
   & > * {
-    margin: ${spacing('sm')}
+    margin: ${spacing('sm')};
   }
-`
+`;

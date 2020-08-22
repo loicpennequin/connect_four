@@ -44,7 +44,7 @@ export function useUsers({
       onUserJoined(newUser);
     });
     return unsub;
-  }, [on, onUserJoined, connectedUsers]);
+  }, [on, connectedUsers.isIdle, connectedUsers.isFetching, onUserJoined]);
 
   useEffect(() => {
     const unsub = on(EVENTS.USER_LEFT_LOBBY, ({ id }) => {
@@ -55,7 +55,7 @@ export function useUsers({
       }, CONNECTED_USER_LIST_UPDATE_DELAY);
     });
     return unsub;
-  }, [on, onUserLeft, connectedUsers]);
+  }, [on, onUserLeft, connectedUsers.isIdle, connectedUsers.isFetching]);
 
   return {
     createUser,

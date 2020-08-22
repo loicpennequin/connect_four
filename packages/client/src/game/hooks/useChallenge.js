@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useContext } from 'react';
-import { constants, noop } from '@c4/shared';
+import { constants } from '@c4/shared';
 import { useWebsockets } from '@core/hooks/useWebsockets';
 import { useCurrentUser } from '@user/hooks/useCurrentUser';
 import { challengeContext } from '@game/contexts/challengeContext';
@@ -7,10 +7,10 @@ import { challengeContext } from '@game/contexts/challengeContext';
 const { EVENTS } = constants;
 
 export function useChallenge({
-  onChallengeInitiated = noop,
-  onChallengeCancelled = noop,
-  onChallengeAccepted = noop,
-  onChallengeDeclined = noop
+  onChallengeInitiated,
+  onChallengeCancelled,
+  onChallengeAccepted,
+  onChallengeDeclined
 } = {}) {
   const { pendingChallenges, setPendingChallenges } = useContext(
     challengeContext
@@ -69,69 +69,53 @@ export function useChallenge({
   );
 
   useEffect(() => {
+    if (!onChallengeInitiated) return;
+
     const unsub = on(
       EVENTS.USER_INITIATED_CHALLENGE,
       ({ challenger, challenged }) => {
-        if (pendingChallenges.find(c => c.challengerId === challenger.id))
-          return;
-
-        setPendingChallenges(challenges =>
-          challenges.concat({
-            challengerId: challenger.id,
-            challengedId: challenged.id
-          })
-        );
         onChallengeInitiated({ challenger, challenged });
       }
     );
 
     return unsub;
-  }, [on, onChallengeInitiated, pendingChallenges, setPendingChallenges]);
+  }, [on, onChallengeInitiated]);
 
   useEffect(() => {
+    if (!onChallengeCancelled) return;
+    
     const unsub = on(
       EVENTS.USER_CANCELLED_CHALLENGE,
       ({ challenger, challenged }) => {
-        setPendingChallenges(challenges =>
-          challenges.filter(
-            challenge => challenge.challengerId !== challenger.id
-          )
-        );
         onChallengeCancelled({ challenger, challenged });
       }
     );
     return unsub;
-  }, [on, onChallengeCancelled, setPendingChallenges]);
+  }, [on, onChallengeCancelled]);
 
   useEffect(() => {
+    if (!onChallengeAccepted) return;
+    
     const unsub = on(
       EVENTS.USER_ACCEPTED_CHALLENGE,
       ({ challenger, challenged }) => {
-        setPendingChallenges(challenges =>
-          challenges.filter(
-            challenge => challenge.challengedId !== challenged.id
-          )
-        );
         onChallengeAccepted({ challenger, challenged });
       }
     );
     return unsub;
-  }, [on, onChallengeAccepted, setPendingChallenges]);
+  }, [on, onChallengeAccepted]);
 
   useEffect(() => {
+    if (!onChallengeDeclined) return;
+    
     const unsub = on(
       EVENTS.USER_REFUSED_CHALLENGE,
       ({ challenger, challenged }) => {
-        setPendingChallenges(challenges =>
-          challenges.filter(
-            challenge => challenge.challengedId !== challenged.id
-          )
-        );
         onChallengeDeclined({ challenger, challenged });
       }
     );
     return unsub;
-  }, [on, onChallengeDeclined, setPendingChallenges]);
+  }, [on, onChallengeDeclined]);
 
   return {
     pendingChallenges,

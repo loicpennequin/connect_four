@@ -10,7 +10,7 @@ import passport from 'passport';
 import cors from 'cors';
 import WebSocket from 'ws';
 import { asValue } from 'awilix';
-import { isProd } from '@c4/shared';
+import { isProd, isUndefined } from '@c4/shared';
 
 import config from '@root/config';
 import logger from '@root/logger';
@@ -32,15 +32,15 @@ if (isProd) {
   app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(compression());
 } else {
-  // app.use(
-  //   cors({
-  //     origin(origin, cb) {
-  //       if (config.WEBSITE_URLS.includes(origin)) cb(null, true);
-  //       else cb(new Error('CORS'));
-  //     },
-  //     credentials: true
-  //   })
-  // );
+  app.use(
+    cors({
+      origin(origin, cb) {
+        if (config.WEBSITE_URLS.includes(origin) || isUndefined(origin)) cb(null, true);
+        else cb(new Error('CORS'));
+      },
+      credentials: true
+    })
+  );
   app.use(logger.middleware);
 }
 

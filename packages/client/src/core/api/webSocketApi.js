@@ -77,26 +77,28 @@ class WebSocketApi {
   }
 
   on(eventName, cb) {
+    console.log('ON', eventName)
     if (!this._listeners.has(eventName)) {
       this._listeners.set(eventName, [cb]);
     } else {
       const isDuplicate = this._listeners
-        .get(eventName)
-        .map(cb => cb.toString())
-        .includes(cb.toString());
+      .get(eventName)
+      .map(cb => cb.toString())
+      .includes(cb.toString());
       if (isDuplicate) {
         console.warn(`duplicate socket listener for ${eventName}`, cb);
       } else {
         this._listeners.get(eventName).push(cb);
       }
     }
-
+    
     return () => this.off(eventName, cb);
   }
-
+  
   off(eventName, cb) {
+    console.log('OFF', eventName)
     if (!this._listeners.has(eventName)) return;
-
+    
     this._listeners.set(
       eventName,
       this._listeners.get(eventName).filter(handler => handler !== cb)

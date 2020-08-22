@@ -20,5 +20,4 @@ export default {
         tooltip: 90,
         dropdown: 80
     },
-    containerWidth: '980px'
 };

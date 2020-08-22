@@ -8,8 +8,9 @@ import React, {
 import { Transition, TransitionGroup } from 'react-transition-group';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
+
 import { isString } from '@c4/shared';
-import { spacing } from '@styles/mixins';
+import { spacing, fontWeight } from '@styles/mixins';
 
 const toastContainerNode = document.createElement('div');
 toastContainerNode.id = 'toast-root';
@@ -21,7 +22,8 @@ toastContainerNode.style.zIndex = 9999;
 export const ToastContext = createContext(null);
 
 const defaultOptions = {
-  type: 'success'
+  type: 'success',
+  timeout: 4000
 };
 
 export function ToastProvider({ children }) {
@@ -34,20 +36,16 @@ export function ToastProvider({ children }) {
 
   const show = useCallback(
     toast => {
-      if (isString(toast)) {
-        toast = {
-          ...defaultOptions,
-          text: toast
-        };
+      toast = {
+        ...defaultOptions,
+        ...isString(toast) ? { text: toast } : toast
       }
 
       setToasts(toasts => toasts.concat(toast));
 
-      const timeout = toast.timeout || 2000;
-
       setTimeout(() => {
         clear(toast);
-      }, timeout);
+      }, toast.timeout);
     },
     [clear]
   );
@@ -84,6 +82,7 @@ function ToastPortal({ toasts }) {
 export const Toast = ({ children, toast, ...props }) => {
   const transitionDuration = 300;
   const { text, ...toastProps } = toast;
+
   return (
     <Transition appear={true} timeout={transitionDuration} {...props}>
       {state => (
@@ -121,6 +120,7 @@ const getTransitionStyles = state => {
 const Wrapper = styled.div`
   background-color: ${props => props.theme.color[props.type]};
   color: ${props => props.theme.color[props.type + 'Invert']};
+  font-weight: ${fontWeight('bold')};
   padding: ${spacing('md')};
   transition: all ${props => props.transitionDuration}ms;
   ${props => getTransitionStyles(props.state)}
