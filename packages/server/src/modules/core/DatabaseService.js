@@ -13,7 +13,7 @@ export class DatabaseService {
   @withLog()
   static async initialize() {
     if (!isProd) {
-      // await DatabaseService.createDatabase();
+      await DatabaseService.createDatabase();
     }
     const knex = Knex(config.DB);
     Model.knex(knex);

@@ -1,14 +1,10 @@
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import LocalStrategy from 'passport-local';
-
-import { constants } from '@c4/shared';
 
 import { container } from '@root/container';
 import { PasswordService } from '@root/modules/core';
 import config from '@root/config';
 import { withLog } from '@root/logger';
-import { UserSerializer } from '@root/modules/user';
 import errors, { serializeError } from '@root/modules/core/ErrorFactory';
 import { AuthSubscribers } from '@root/modules/auth/AuthSubscribers';
 

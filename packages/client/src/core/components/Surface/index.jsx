@@ -6,5 +6,6 @@ export const Surface = styled.div`
   color: ${color('text')};
   margin: ${spacing('md')};
   padding: ${spacing('md')};
-  box-shadow: 0 0 4px 2px rgba(0,0,0,0.13);
+  box-shadow: 0 0 4px 2px rgba(0,0,0,0.08);
 `;
+

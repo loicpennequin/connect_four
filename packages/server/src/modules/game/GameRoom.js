@@ -76,6 +76,7 @@ export class GameRoom {
 
   _updateBoard(colIndex) {
     if (this.state.board[colIndex].every(Boolean)) return;
+    
     this.state.board.forEach((column, i) => {
       if (i === colIndex) {
         column[column.indexOf(null)] = {

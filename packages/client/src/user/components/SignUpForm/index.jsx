@@ -1,29 +1,36 @@
 import React, { useState, useCallback } from 'react';
+import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
-import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
 
+import { spacing } from '@styles/mixins';
+
 import { Link } from '@core/components/Link';
+import { TextInput } from '@core/components/TextInput';
+import { FormControl } from '@core/components/FormControl';
+import { FormError } from '@core/components/FormError';
+import { Button } from '@core/components/Button';
+import { Flex } from '@core/components/Flex';
   
 const schema = yup.object().shape({
   username: yup
     .string()
-    .required()
-    .min(4)
-    .max(16),
+    .required('Please provide a username.')
+    .min(4, 'Your username must be at least 4 characters long.')
+    .max(16, 'Your username must bt at most 16 characters long.'),
   email: yup
     .string()
-    .required()
-    .email(),
+    .required('Please provide an email.')
+    .email('This email is not valid.'),
   password: yup
-    .string()
+    .string('Please provide a password.')
     .required()
-    .min(6),
+    .min(6, 'Your password must be at least 6 characters long.'),
   passwordConfirm: yup
     .string()
-    .required()
-    .oneOf([yup.ref('password')])
+    .required('Please confrm your password.')
+    .oneOf([yup.ref('password')], 'Your passwords are not the same.')
 });
 
 export function SignUpForm({ onSubmit }) {
@@ -51,41 +58,56 @@ export function SignUpForm({ onSubmit }) {
   );
 
   return (
-    <form
-      noValidate
-      onSubmit={handleSubmit(submit)}
-      style={{ display: 'flex', flexDirection: 'column' }}
-    >
-      <label htmlFor="create-user_username">Username</label>
-      <input id="create-user_username" name="username" ref={register} />
-      <ErrorMessage errors={errors} name="username" />
-
-      <label htmlFor="create-user_email">Email</label>
-      <input id="create-user_email" name="email" type="email" ref={register} />
-      <ErrorMessage errors={errors} name="email" />
-
-      <label htmlFor="create-user_password">Password</label>
-      <input
-        id="create-user_password"
-        name="password"
+    <form noValidate onSubmit={handleSubmit(submit)}>
+      <FormControl
+        name="username"
+        error={errors.username}
+        label="Username"
+        component={TextInput}
         ref={register}
-        type="password"
       />
-      <ErrorMessage errors={errors} name="password" />
-
-      <label htmlFor="create-user_password-confirm">Confirm Password</label>
-      <input
-        id="create-user_password-confirm"
+      <FormControl
+        type="mail"
+        name="email"
+        error={errors.username}
+        label="E-mail"
+        component={TextInput}
+        ref={register}
+      />
+      <FormControl
+        type="password"
+        name="password"
+        error={errors.password}
+        label="Password"
+        component={TextInput}
+        ref={register}
+      />
+      <FormControl
         type="password"
         name="passwordConfirm"
+        error={errors.passwordConfirm}
+        label="Password"
+        component={TextInput}
         ref={register}
       />
-      <ErrorMessage errors={errors} name="passwordConfirm" />
 
-      <Link to="Home">I already have an account</Link>
+      <Flex justify="center">
+        <FormError>{generalError?.[0]?.message}</FormError>
+      </Flex>
 
-      <button disabled={formState.isSubmitting}>Sign up</button>
-      {generalError && <div>{generalError[0].message}</div>}
+      <ActionBar justify="space-around" align="center">
+        <Link to="Home">I already have an account</Link>
+        <Button cta disabled={formState.isSubmitting}>
+          Sign Up
+        </Button>
+      </ActionBar>
     </form>
   );
 }
+
+
+const ActionBar = styled(Flex)`
+  & > * {
+    margin: ${spacing('sm')};
+  }
+`;

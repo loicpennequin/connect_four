@@ -22,7 +22,6 @@
     "babel-plugin-codegen": "^3.1.0",
     "babel-plugin-styled-components": "^1.10.7",
     "customize-cra": "^0.9.1",
-    "eslint-plugin-babel": "^5.3.0",
     "inert-polyfill": "^0.2.5",
     "merge-headers": "^1.1.0",
     "polished": "^3.4.4",
@@ -51,9 +50,6 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -67,6 +63,7 @@
     ]
   },
   "devDependencies": {
+    "eslint-plugin-babel": "^5.3.1",
     "@storybook/addon-actions": "^5.3.14",
     "@storybook/addon-links": "^5.3.14",
     "@storybook/addons": "^5.3.14",

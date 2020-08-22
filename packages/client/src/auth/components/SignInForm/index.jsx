@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
+import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
 
+import { spacing } from '@styles/mixins';
 import { Link } from '@core/components/Link';
-import { Surface } from '@core/components/Surface';
 import { TextInput } from '@core/components/TextInput';
 import { FormControl } from '@core/components/FormControl';
 import { FormError } from '@core/components/FormError';
@@ -12,8 +13,8 @@ import { Button } from '@core/components/Button';
 import { Flex } from '@core/components/Flex';
 
 const schema = yup.object().shape({
-  username: yup.string().required(),
-  password: yup.string().required()
+  username: yup.string().required('Please provide your username.'),
+  password: yup.string().required('Please provide your password.')
 });
 
 export function SignInForm({ onSubmit }) {
@@ -41,7 +42,7 @@ export function SignInForm({ onSubmit }) {
   );
 
   return (
-    <Surface as="form" noValidate onSubmit={handleSubmit(submit)}>
+    <form noValidate onSubmit={handleSubmit(submit)}>
       <FormControl
         name="username"
         error={errors.username}
@@ -62,13 +63,18 @@ export function SignInForm({ onSubmit }) {
         <FormError>{generalError?.[0]?.message}</FormError>
       </Flex>
       
-      <Flex justify="space-around" align="center">
+      <ActionBar justify="space-around" align="center">
         <Link to="SignUp">I don't have an account</Link>
         <Button cta disabled={formState.isSubmitting}>
           Sign In
         </Button>
-      </Flex>
-      
-    </Surface>
+      </ActionBar>    
+    </form>
   );
 }
+
+const ActionBar = styled(Flex)`
+  & > * {
+    margin: ${spacing('sm')}
+  }
+`

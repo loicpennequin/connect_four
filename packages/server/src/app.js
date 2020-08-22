@@ -32,15 +32,15 @@ if (isProd) {
   app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(compression());
 } else {
-  app.use(
-    cors({
-      origin(origin, cb) {
-        if (config.WEBSITE_URLS.includes(origin)) cb(null, true);
-        else cb(new Error('CORS'));
-      },
-      credentials: true
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin(origin, cb) {
+  //       if (config.WEBSITE_URLS.includes(origin)) cb(null, true);
+  //       else cb(new Error('CORS'));
+  //     },
+  //     credentials: true
+  //   })
+  // );
   app.use(logger.middleware);
 }
 

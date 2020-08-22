@@ -33,7 +33,7 @@ export class HttpClient {
         this._prepareUrl(url, query),
         this._getOptions({ ...options, signal })
       );
-
+      console.log(requestOptions);
       const request = new Request(requestUrl, requestOptions);
       try {
         const response = await fetch(request);
