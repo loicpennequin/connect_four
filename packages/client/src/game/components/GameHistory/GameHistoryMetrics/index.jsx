@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-import { color, fontSize, fontWeight } from '@styles/mixins';
+import { color, spacing, fontSize, fontWeight } from '@styles/mixins';
 
 import { Flex } from '@core/components/Flex';
 
@@ -13,7 +13,7 @@ export function GameHistoryMetrics({ gameHistory }) {
   );
 
   return (
-      <Flex justify="space-around">
+      <Wrapper justify="space-around">
         <Flex direction="column">
           <InfoLabel>Games played</InfoLabel>
           <GameCount justify="center" align="center">
@@ -21,7 +21,7 @@ export function GameHistoryMetrics({ gameHistory }) {
           </GameCount>
         </Flex>
         <div>
-          <h3 style={{ textAlign: 'center' }}>Win rate</h3>
+          <InfoLabel>Win rate</InfoLabel>
           <WinRate
             justify="center"
             align="center"
@@ -31,7 +31,7 @@ export function GameHistoryMetrics({ gameHistory }) {
             <div>{winRatePercentage}</div>
           </WinRate>
         </div>
-      </Flex>
+      </Wrapper>
   );
 }
 
@@ -59,6 +59,11 @@ const progress = props => keyframes`
     --progress-color: hsl(${props.winRate * 100}, 90%, 70%);
     --progress: ${props.winRatePercentage}; 
   }
+`;
+
+const Wrapper = styled(Flex)`
+  border: solid 1px ${color('lightGrey')};
+  padding: ${spacing('lg')};
 `;
 
 const WinRate = styled(Flex)`
@@ -98,4 +103,5 @@ const GameCount = styled(Flex)`
 
 const InfoLabel = styled.h3`
   text-align: center;
+  margin-top: 0;
 `;

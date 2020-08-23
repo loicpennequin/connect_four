@@ -7,7 +7,7 @@ export class GameHistory {
       game.opponent = game.user1.id === this.ownerId ? game.user2 : game.user1
       game.isWin = game.winner.id === this.ownerId;
       game.getTimeAgo = () => {
-        return formatDistanceToNow(new Date(game.createdAt), { addSuffix: true });
+        return formatDistanceToNow(new Date(game.createdAt), { addSuffix: true }).replace('about', '');
       }
     })
   }

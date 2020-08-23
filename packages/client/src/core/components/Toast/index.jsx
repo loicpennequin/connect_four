@@ -89,7 +89,7 @@ export const Toast = ({ children, toast, ...props }) => {
   const transitionDuration = 300;
   const { text, ...toastProps } = toast;
   const { clear } = useContext(ToastContext);
-
+  
   return (
     <Transition appear={true} timeout={transitionDuration} {...props}>
       {state => (

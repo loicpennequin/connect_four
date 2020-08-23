@@ -15,7 +15,15 @@ export class GameService {
   async findAllByUser(id) {
     return await Game.query()
       .where({ user1_id: id })
-      .orWhere({ user2_id: id });
+      .orWhere({ user2_id: id })
+      .orderBy('created_at', 'desc');
+  }
+  
+  @withLog()
+  async findById(id) {
+    return Game.query()
+      .findById(id)
+      .throwIfNotFound();
   }
 
   @withLog(true)

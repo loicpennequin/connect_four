@@ -23,6 +23,7 @@ export class Game extends BaseModel {
         .positive()
         .required(),
 
+      history: Joi.any().required()
     };
   }
 }

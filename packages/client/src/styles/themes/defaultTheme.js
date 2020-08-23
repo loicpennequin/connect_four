@@ -8,6 +8,9 @@ export default mergeTheme({
         text: colors.black,
         background: colors.ultraLightGrey,
         surface: colors.white,
-        successInvert: colors.white
+        successInvert: colors.white,
+
+        redChecker: 'orangered',
+        yellowChecker: 'orange'
     }
 });

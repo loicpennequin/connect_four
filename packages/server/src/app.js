@@ -17,6 +17,7 @@ import logger from '@root/logger';
 import { container } from '@root/container';
 import { DatabaseService, WebSocketService } from '@root/modules/core';
 import { userRoutes } from '@root/modules/user';
+import { gameRoutes } from '@root/modules/game';
 import { authRoutes, AuthService } from '@root/modules/auth';
 import { GameService } from '@root/modules/game';
 import errors, { serializeError } from '@root/modules/core/ErrorFactory';
@@ -35,7 +36,6 @@ if (isProd) {
   app.use(
     cors({
       origin(origin, cb) {
-        console.log(origin)
         if (config.WEBSITE_URLS.includes(origin) || isUndefined(origin)) cb(null, true);
         else cb(new Error('CORS'));
       },
@@ -52,6 +52,7 @@ app.use(cookieParser(config.SESSION.SECRET));
 app.use(passport.initialize());
 app.use(scopePerRequest(container));
 app.use('/users', userRoutes);
+app.use('/games', gameRoutes);
 app.use('/auth', authRoutes);
 app.use('*', (req, res) =>
   res.status(404).json(serializeError(errors.notFound()))

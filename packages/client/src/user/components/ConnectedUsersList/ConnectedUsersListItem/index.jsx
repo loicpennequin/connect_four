@@ -56,7 +56,7 @@ export function ConnectedUsersListItem({ user, ...props }) {
           <ActionList>
             {isChallengeable && (
               <Button
-                variant="accent"
+                variant="brand"
                 onClick={() => initiateChallenge(user.id)}
               >
                 Challenge

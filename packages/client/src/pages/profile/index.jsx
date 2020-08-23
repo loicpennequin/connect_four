@@ -1,4 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
+
+import { color, spacing } from '@styles/mixins';
 import { useUser } from '@user/hooks/useUser';
 
 import { GameHistory } from '@game/components/GameHistory';
@@ -13,9 +16,29 @@ export default function ProfilePage({ match }) {
   return (
     <Container>
       <Surface>
-        <h1 style={{textAlign: 'center'}}>{user.username}</h1>
+        <Username>
+          {user.username}
+          <Status isOnline={user.isOnline}/>
+        </Username>
         <GameHistory userId={id} />
       </Surface>
     </Container>
   );
 }
+
+const Username = styled.h2`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+`;
+
+const Status = styled.div`
+  --size: 0.5em;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background-color: ${props => color(props.isOnline ? 'success' : 'danger')};
+  margin-left: ${spacing('sm')};
+`;

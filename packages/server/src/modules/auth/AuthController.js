@@ -10,6 +10,7 @@ export class AuthController {
   }
 
   _setCookie(res, value) {
+    console.log(config.COOKIE.SAMESITE);
     res.cookie('refresh_token', value, {
       path: config.COOKIE.PATH,
       secure: config.COOKIE.SECURE,

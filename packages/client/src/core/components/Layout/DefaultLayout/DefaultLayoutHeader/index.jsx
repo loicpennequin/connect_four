@@ -29,19 +29,19 @@ export function DefaultLayoutHeader() {
   return (
     <Header>
       <Container as={Flex} align="center" justify="space-between">
-        <Flex>
+        <HeaderLeft>
           <HeaderLink to="Home">
             <FontAwesomeIcon icon={faHome} />
+            <AppName>
+              C<span>o</span>nnect F<span>o</span>ur
+            </AppName>
           </HeaderLink>
-        </Flex>
+        </HeaderLeft>
 
         {currentUser.data && (
           <HeaderRight>
             <Username>Hi, {currentUser.data.username}</Username>
-            <HeaderLink
-              to="Profile"
-              params={{id: currentUser.data.id}}
-            >
+            <HeaderLink to="Profile" params={{ id: currentUser.data.id }}>
               <FontAwesomeIcon icon={faUser} />
             </HeaderLink>
             <HeaderLink
@@ -65,6 +65,16 @@ const HeaderRight = styled(Flex)`
   }
 `;
 
+const HeaderLeft = styled(Flex)`
+  a {
+    text-decoration: none;
+  }
+
+  & > * {
+    margin: 0 ${spacing('sm')};
+  }
+`;
+
 const Username = styled.span``;
 
 const Header = styled.header`
@@ -77,7 +87,20 @@ const HeaderLink = styled(Link)`
   font-size: ${fontSize('lg')};
   color: inherit;
   padding: 0;
-  &:hover {
+  &:hover, &:focus {
     color: ${color('accent')};
+  }
+`;
+
+const AppName = styled.span`
+  margin-left: ${spacing('sm')};
+  font-size: ${fontSize('lg')};
+
+  span:nth-of-type(1) {
+    color: ${color('redChecker')};
+  }
+
+  span:nth-of-type(2) {
+    color: ${color('yellowChecker')};
   }
 `;

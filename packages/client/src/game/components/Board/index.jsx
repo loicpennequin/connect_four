@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-export function Board({ boardState, onColumnClick }) {
+import { color } from '@styles/mixins';
+
+export function Board({ boardState, onColumnClick = () => {} }) {
   const [highlightedColumn, setHghlightedColumn] = useState(null);
 
-  const getCellColor = cell =>
-    cell.player === boardState.playerIds[0] ? 'orangered' : 'orange';
-
+  const getCellColor = cell => cell.player === boardState.playerIds[0] ? 'redChecker' : 'yellowChecker';
+  
   return (
     <div>
       <StyledBoard rows={boardState.rows} columns={boardState.columns}>
@@ -23,7 +24,7 @@ export function Board({ boardState, onColumnClick }) {
             >
               {cell && (
                 <StyledChecker
-                  $color={() => getCellColor(cell)}
+                  $color={getCellColor(cell)}
                   faded={boardState.winner && !cell.isWinningCell}
                 />
               )}
@@ -111,8 +112,7 @@ const StyledCell = styled.div`
 `;
 
 const StyledChecker = styled.div`
-  --bg-color: ${props => props.$color};
-  background-color: var(--bg-color);
+  background-color: ${props => color(props.$color)};
   ${props => props.player && 'content: "";'}
   position: absolute;
   width: 100%;

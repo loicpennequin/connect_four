@@ -7,7 +7,8 @@ export class GameSerializer {
       user1: UserSerializer.toDomain(dto.user1),
       user2: UserSerializer.toDomain(dto.user2),
       winner: UserSerializer.toDomain(dto.winner),
-      createdAt: dto.createdAt
+      createdAt: dto.createdAt,
+      history: dto.history
     };
   }
 }

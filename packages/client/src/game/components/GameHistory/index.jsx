@@ -23,20 +23,20 @@ export function GameHistory({ userId }) {
       )}
 
       <HistoryTitle>Game History</HistoryTitle>
-      <Flex as="ul" justify="center">
+      <Flex as="ul" direction="column" align="center">
         {gameHistory.games.map(game => (
           <GameHistoryItem as="li" key={game.id}>
+            <div>{game.getTimeAgo()}</div>
             <div>
-              VS{' '}
               <Link to="Profile" params={{ id: game.opponent.id }}>
-                {game.opponent.username}
+              VS {game.opponent.username}
               </Link>
             </div>
-            <div>{game.getTimeAgo()}</div>
             <GameHistoryItemResult isWin={game.isWin}>
               {game.isWin ? 'WIN' : 'LOSS'}
             </GameHistoryItemResult>
-          </GameHistoryItem>
+            <Link to="Replay" params={{id: game.id}}>Replay</Link>
+           </GameHistoryItem>
         ))}
       </Flex>
     </div>
@@ -45,12 +45,10 @@ export function GameHistory({ userId }) {
 
 const GameHistoryItem = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   justify-content: center;
-  border: solid 1px black;
   padding: ${spacing('sm')} ${spacing('md')};
-  width: 25em;
-  margin-top: ${spacing('lg')};
+  width: 28em;
   grid-gap: ${spacing('sm')};
 
   @media screen and (${mobileOnly}) {
@@ -59,7 +57,6 @@ const GameHistoryItem = styled.div`
 
   a {
     text-decoration: none;
-    color: ${color('accent')};
   }
 
   & > * {

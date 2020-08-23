@@ -24,7 +24,7 @@ const Wrapper = styled.p`
   margin: 0;
   transition: all 500ms;
   padding: ${spacing('sm')};
-  transition: all 300ms;
+  transition: all 500ms;
   opacity: ${props =>
     props.state === 'entering' || props.state === 'exited' ? 0 : 1};
 `;

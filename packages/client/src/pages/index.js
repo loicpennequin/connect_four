@@ -57,4 +57,12 @@ export const routes = [
     authLevel: constants.AUTH_LEVELS.PRIVATE,
     layout: DefaultLayout
   },
+  {
+    name: 'Replay',
+    path: '/replay/:id',
+    exact: true,
+    component: pageComponentFactory(() => import('@root/pages/replay')),
+    authLevel: constants.AUTH_LEVELS.PRIVATE,
+    layout: DefaultLayout
+  },
 ];

@@ -23,6 +23,7 @@ exports.up = async function(knex) {
       .inTable('user')
       .notNullable()
       .onDelete('CASCADE');
+    table.json('history').notNullable();
   });
 };
 

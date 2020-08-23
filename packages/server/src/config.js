@@ -30,7 +30,7 @@ export default {
   COOKIE: {
     PATH: '/',
     SECURE: isProd,
-    SAMESITE: true,
+    SAMESITE: isProd ? 'None' : true,
     MAXAGE: 604800000,
     HTTPONLY: true
   },

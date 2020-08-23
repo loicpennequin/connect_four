@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import clone from 'clone';
 import { constants, isDefined } from '@c4/shared';
 import { container } from '@root/container';
 import { withLog } from '@root/logger';
@@ -26,6 +27,8 @@ export class GameRoom {
       currentPlayer: playerIds[Math.round(Math.random())]
     };
 
+    this.history = [clone(this.state)];
+
     this.websocketService.emit(
       EVENTS.GAME_HAS_BEEN_CREATED,
       this.state,
@@ -48,21 +51,21 @@ export class GameRoom {
 
     this._updateBoard(data.column);
     this._updateWinner();
-    if (!this.state.winner) {
-      this._updateCurrentPlayer();
-      this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
-    } else {
-      this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
+    this._updateCurrentPlayer();
+    this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
+    this.history.push(clone(this.state));
+    
+    if (this.state.winner) {
       await this.gameService.create({
         user1Id: this.state.playerIds[0],
         user2Id: this.state.playerIds[1],
-        winnerId: this.state.winner
+        winnerId: this.state.winner,
+        history: JSON.stringify(this.history)
       });
 
       this.websocketService.emit(EVENTS.GAME_HAS_FINISHED, this.state, ...this.clients);
       this.gameService.removeGameInstance(this.state.id);
-    }
-
+    } 
   }
 
   _createBoard() {
