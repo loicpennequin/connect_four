@@ -5,6 +5,7 @@ import { useReplay } from '@game/hooks/useReplay';
 
 import { Board } from '@game/components/Board';
 import { Container } from '@core/components/Container';
+import { Surface } from '@core/components/Surface';
 import { ReplayControls } from '@game/components/ReplayControls';
 
 export default function ReplayPage() {
@@ -15,8 +16,10 @@ export default function ReplayPage() {
 
   return (
     <Container>
-      <Board boardState={state} />
-      <ReplayControls controls={controls} />
+      <Surface>
+        <Board boardState={state} />
+        <ReplayControls controls={controls} />
+      </Surface>
     </Container>
   );
 }

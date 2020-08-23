@@ -8,6 +8,7 @@ import { spacing, color, fontWeight, mobileOnly } from '@styles/mixins';
 import { GameHistoryMetrics } from './GameHistoryMetrics';
 import { Flex } from '@core/components/Flex';
 import { Link } from '@core/components/Link';
+import { Button } from '@core/components/Button';
 
 export function GameHistory({ userId }) {
   const { data: gameHistory, isLoading } = useGameHistory(userId);
@@ -35,7 +36,7 @@ export function GameHistory({ userId }) {
             <GameHistoryItemResult isWin={game.isWin}>
               {game.isWin ? 'WIN' : 'LOSS'}
             </GameHistoryItemResult>
-            <Link to="Replay" params={{id: game.id}}>Replay</Link>
+            <Button as={Link} to="Replay" params={{id: game.id}}>Replay</Button>
            </GameHistoryItem>
         ))}
       </Flex>
@@ -47,6 +48,7 @@ const GameHistoryItem = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   justify-content: center;
+  align-items: center;
   padding: ${spacing('sm')} ${spacing('md')};
   width: 28em;
   grid-gap: ${spacing('sm')};
