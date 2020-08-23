@@ -124,6 +124,5 @@ const StyledChecker = styled.div`
     transparent 50%
   );
   animation: ${drop} 0.5s ease-in;
-  z-index: -1;
   opacity: ${props => (props.faded ? 0.35 : 1)};
 `;
