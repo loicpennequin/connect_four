@@ -9,6 +9,8 @@
     "postclean": "rimraf node_modules",
     "dev": "lerna run dev --stream",
     "build": "lerna run build --stream",
+    "build:api": "npm run bootstrap && npm -C ./packages/server run build",
+    "build:client": "npm run bootstrap && npm -C ./packages/client run build",
     "start": "npm run start --stream",
     "start:api": "npm -C ./packages/server run start",
     "start:client": "npm -C ./packages//client run start",
@@ -16,7 +18,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "storybook": "lerna run storybook --stream",
-    "heroku:postbuild": "npm run build"
+    "heroku-postbuild": "node tools/scripts/heroku-build.js"
   },
   "version": "0.0.1",
   "main": "index.js",
