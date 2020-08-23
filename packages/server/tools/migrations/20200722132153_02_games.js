@@ -1,7 +1,7 @@
 exports.up = async function(knex) {
   return knex.schema.createTable('game', table => {
     table.increments().primary();
-    table.timestamps(true, true);
+    table.timestamp('created_at').defaultTo(knex.fn.now());
     table
       .integer('user1_id')
       .unsigned()
@@ -23,7 +23,7 @@ exports.up = async function(knex) {
       .inTable('user')
       .notNullable()
       .onDelete('CASCADE');
-    table.json('history').notNullable();
+    table.text('history').notNullable();
   });
 };
 

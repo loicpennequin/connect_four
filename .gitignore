@@ -12,6 +12,7 @@ node_modules/
 
 # environnement configuration
 **/.env
+**/.env.production
 
 # logs #
 **/*.log

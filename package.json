@@ -8,7 +8,6 @@
     "clean": "lerna clean",
     "postclean": "rimraf node_modules",
     "dev": "lerna run dev --stream",
-    "build": "lerna run build --stream",
     "build:api": "npm run bootstrap && npm -C ./packages/server run build",
     "build:client": "npm run bootstrap && npm -C ./packages/client run build",
     "start:api": "npm -C ./packages/server run start",

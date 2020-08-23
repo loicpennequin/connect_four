@@ -4,7 +4,7 @@ exports.up = async function(knex) {
       .increments()
       .unsigned()
       .primary();
-    table.timestamps(true, true);
+    table.timestamp('created_at').defaultTo(knex.fn.now());
     table.string('username').unique();
     table
       .string('email')
