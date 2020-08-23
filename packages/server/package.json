@@ -9,6 +9,7 @@
     "predev": "npm run clean",
     "dev": "npm-run-all -p webpack-watch serve",
     "build": "cross-env NODE_ENV=production webpack",
+    "postbuild": "npm run migrate:latest",
     "webpack-watch": "webpack --watch",
     "serve": "wait-on ./dist/bundle.js && cross-env NODE_ENV=development nodemon dist/bundle.js",
     "migrate:make": "knex migrate:make",
