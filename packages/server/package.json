@@ -8,7 +8,7 @@
     "clean": "rimraf ./dist",
     "predev": "npm run clean",
     "dev": "npm-run-all -p webpack-watch serve",
-    "webpack": "webpack",
+    "build": "cross-env NODE_ENV=production webpack",
     "webpack-watch": "webpack --watch",
     "serve": "wait-on ./dist/bundle.js && cross-env NODE_ENV=development nodemon dist/bundle.js",
     "migrate:make": "knex migrate:make",

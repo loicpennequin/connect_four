@@ -57,6 +57,9 @@ app.use('/auth', authRoutes);
 app.use('*', (req, res) =>
   res.status(404).json(serializeError(errors.notFound()))
 );
+app.get('/', (req, res) => {
+  res.json({version: '1.0.0'});
+});
 
 server.start = async function() {
   AuthService.initialize(container);
