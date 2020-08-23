@@ -1,4 +1,5 @@
 import { removeEmptyKeys } from '@c4/shared';
+import { GameSerializer } from '@root/modules/game';
 
 export class UserSerializer {
   static toDTO(data) {
@@ -8,7 +9,8 @@ export class UserSerializer {
       email: data.email,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      isOnline: !!data.is_online
+      isOnline: !!data.is_online,
+      games: data.games?.map?.(GameSerializer.toDTO)
     });
   }
 

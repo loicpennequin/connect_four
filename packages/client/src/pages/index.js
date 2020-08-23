@@ -48,5 +48,13 @@ export const routes = [
     component: pageComponentFactory(() => import('@root/pages/game')),
     authLevel: constants.AUTH_LEVELS.PRIVATE,
     layout: FullPageLayout
-  }
+  },
+  {
+    name: 'Profile',
+    path: '/user/:id',
+    exact: true,
+    component: pageComponentFactory(() => import('@root/pages/profile')),
+    authLevel: constants.AUTH_LEVELS.PRIVATE,
+    layout: DefaultLayout
+  },
 ];

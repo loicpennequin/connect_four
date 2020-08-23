@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faPowerOff } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faPowerOff, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { useToast } from '@core/hooks/useToast';
 import { useAuth } from '@auth/hooks/useAuth';
@@ -36,8 +36,14 @@ export function DefaultLayoutHeader() {
         </Flex>
 
         {currentUser.data && (
-          <Flex>
+          <HeaderRight>
             <Username>Hi, {currentUser.data.username}</Username>
+            <HeaderLink
+              to="Profile"
+              params={{id: currentUser.data.id}}
+            >
+              <FontAwesomeIcon icon={faUser} />
+            </HeaderLink>
             <HeaderLink
               as={Button}
               plain
@@ -46,16 +52,20 @@ export function DefaultLayoutHeader() {
             >
               <FontAwesomeIcon icon={faPowerOff} />
             </HeaderLink>
-          </Flex>
+          </HeaderRight>
         )}
       </Container>
     </Header>
   );
 }
 
-const Username = styled.span`
-  margin-right: ${spacing('md')};
+const HeaderRight = styled(Flex)`
+  & > * {
+    margin: 0 ${spacing('sm')};
+  }
 `;
+
+const Username = styled.span``;
 
 const Header = styled.header`
   color: ${color('brandInvert')};

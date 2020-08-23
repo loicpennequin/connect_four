@@ -8,6 +8,7 @@ import { lobbyContext } from '@root/game/contexts/lobbyContext';
 import { spacing, color } from '@styles/mixins';
 import { Button } from '@core/components/Button';
 import { Flex } from '@core/components/Flex';
+import { Link } from '@core/components/Link';
 
 export function ConnectedUsersListItem({ user, ...props }) {
   const {
@@ -51,7 +52,7 @@ export function ConnectedUsersListItem({ user, ...props }) {
     <Transition appear={true} timeout={transitionDuration} {...props}>
       {state => (
         <Wrapper state={state} transitionDuration={transitionDuration}>
-          <span>{user.username}</span>
+          <Link to="Profile" params={{id: user.id}}>{user.username}</Link>
           <ActionList>
             {isChallengeable && (
               <Button

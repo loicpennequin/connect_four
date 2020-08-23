@@ -30,6 +30,7 @@ export class UserController {
   async findById(req, res) {
     const user = await this.userService.findById(req.params.id);
     if (!user) throw errors.notFound();
+    
     res.send(UserSerializer.toDTO(user));
   }
 

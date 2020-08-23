@@ -35,6 +35,7 @@ if (isProd) {
   app.use(
     cors({
       origin(origin, cb) {
+        console.log(origin)
         if (config.WEBSITE_URLS.includes(origin) || isUndefined(origin)) cb(null, true);
         else cb(new Error('CORS'));
       },

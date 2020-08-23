@@ -11,7 +11,11 @@ export default {
 
   ENV: process.env.NODE_ENV,
 
-  WEBSITE_URLS: ['http://localhost:3000', 'http://192.168.1.29:3000'],
+  WEBSITE_URLS: [
+    'http://localhost:3000',
+    'http://192.168.1.29:3000',
+    'http://192.168.1.13:3000'
+  ],
 
   DB: dbConfig,
 
