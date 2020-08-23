@@ -6,7 +6,7 @@ console.log(`APP_NAME is ${process.env.APP_NAME}`);
 function execWrap(command) {
   exec(command, (error, stdout, stderr) => {
     if (error) {
-      console.error(`exec error: ${error}`);
+      console.error(error);
       return;
     }
     console.log(`stdout: ${stdout}`);
