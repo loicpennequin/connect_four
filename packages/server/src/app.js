@@ -33,18 +33,18 @@ if (isProd) {
   app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(compression());
 } else {
-  app.use(
-    cors({
-      origin(origin, cb) {
-        if (config.WEBSITE_URLS.includes(origin) || isUndefined(origin)) cb(null, true);
-        else cb(new Error('CORS'));
-      },
-      credentials: true
-    })
-  );
   app.use(logger.middleware);
 }
 
+app.use(
+  cors({
+    origin(origin, cb) {
+      if (config.WEBSITE_URL === origin || isUndefined(origin)) cb(null, true);
+      else cb(new Error('CORS'));
+    },
+    credentials: true
+  })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(helmet());
@@ -54,12 +54,12 @@ app.use(scopePerRequest(container));
 app.use('/users', userRoutes);
 app.use('/games', gameRoutes);
 app.use('/auth', authRoutes);
-app.use('*', (req, res) =>
-  res.status(404).json(serializeError(errors.notFound()))
-);
 app.get('/', (req, res) => {
   res.json({version: '1.0.0'});
 });
+app.use('*', (req, res) =>
+  res.status(404).json(serializeError(errors.notFound()))
+);
 
 server.start = async function() {
   AuthService.initialize(container);
