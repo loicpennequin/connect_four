@@ -47,7 +47,6 @@
   "scripts": {
     "dev": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "start": "node server.js",
     "test": "react-app-rewired test",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"

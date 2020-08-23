@@ -1,6 +1,5 @@
 {
   "root": "packages/client/build",
-  "clean_urls": true,
   "https_only": true,
   "routes": {
     "/static/*": "/static/",
