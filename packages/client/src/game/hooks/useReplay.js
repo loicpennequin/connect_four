@@ -21,7 +21,7 @@ export function useReplay(gameId) {
     setCurrentStep(s => s + 1);
   }, [currentStep, game.data]);
   const goToPreviousStep = useCallback(
-    () => setCurrentStep(s => (s === 0 ? s : s + 1)),
+    () => setCurrentStep(s => (s === 0 ? s : s - 1)),
     []
   );
   const goToFirstStep = useCallback(() => setCurrentStep(0), []);
