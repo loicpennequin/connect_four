@@ -1,51 +1,17 @@
 import { withLog } from '@root/logger';
-import { User } from './UserModel';
-import { UserSerializer } from './UserSerializer';
+import { Message } from './MessageModel';
+import { MessageSerializer } from './MessageSerializer';
 
-export class UserService {
+export class MessageService {
   @withLog()
-  async findAll({ filter = {} } = {}) {
-    return await User.query().where(filter);
-  }
-
-  @withLog(true)
-  async findByRefreshToken(refresh_token) {
-    if (!refresh_token) return;
-
-    return await User.query().findOne({ refresh_token });
-  }
-
-  @withLog(true)
-  async findByUsername(username) {
-    return await User.query().findOne({ username });
-  }
-
-  @withLog(true)
-  findById(id) {
-    return User.query()
-      .findById(id)
-      .throwIfNotFound();
-  }
-
-  @withLog(true)
-  async findByIds(ids) {
-    const users = await User.query()
-      .findByIds(ids)
-      .throwIfNotFound();
-    // Objections's .findById() doesn't guarantee The order of the returned items...
-    // Todo : extend Objection's QueryBuilder in the BaseModel to add a FindByIdsAndSort() method
-    return ids.map(id => users.find(user => user.id === id));
+  async findAll({filter = {}, order} = {}) {
+    return await Message.query()
+      .where(filter)
+      .orderBy(order);
   }
 
   @withLog(true)
   create(data) {
-    return User.query().insertAndFetch(UserSerializer.toPersistence(data));
-  }
-
-  @withLog(true)
-  update(id, data) {
-    return User.query()
-      .patchAndFetchById(id, UserSerializer.toPersistence(data))
-      .throwIfNotFound();
+    return Message.query().insertAndFetch(MessageSerializer.toPersistence(data));
   }
 }

@@ -18,6 +18,7 @@ import { container } from '@root/container';
 import { DatabaseService, WebSocketService } from '@root/modules/core';
 import { userRoutes } from '@root/modules/user';
 import { gameRoutes } from '@root/modules/game';
+import { messageRoutes } from '@root/modules/message';
 import { authRoutes, AuthService } from '@root/modules/auth';
 import { GameService } from '@root/modules/game';
 import errors, { serializeError } from '@root/modules/core/ErrorFactory';
@@ -53,6 +54,7 @@ app.use(passport.initialize());
 app.use(scopePerRequest(container));
 app.use('/users', userRoutes);
 app.use('/games', gameRoutes);
+app.use('/messages', messageRoutes);
 app.use('/auth', authRoutes);
 app.get('/', (req, res) => {
   res.json({version: '1.0.0'});

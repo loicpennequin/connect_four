@@ -4,6 +4,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useChallenge } from '@game/hooks/useChallenge';
+import { lobbyContext } from '@root/game/contexts/lobbyContext';
 
 import { spacing } from '@styles/mixins';
 
@@ -11,7 +12,7 @@ import { Container } from '@core/components/Container';
 import { Flex } from '@core/components/Flex';
 import { Surface } from '@core/components/Surface';
 import { ConnectedUsersList } from '@user/components/ConnectedUsersList';
-import { lobbyContext } from '@root/game/contexts/lobbyContext';
+import { MessageList } from '@message/components/MessageList';
 
 export default function LobbyPage() {
   const { isGameLoading, setIsGameLoading } = useContext(lobbyContext);
@@ -33,7 +34,10 @@ export default function LobbyPage() {
             <div>Starting your Game...</div>
           </LoadingWrapper>
         ) : (
-          <ConnectedUsersList />
+          <>
+            <MessageList />
+            <ConnectedUsersList />
+          </>
         )}
       </Surface>
     </Wrapper>

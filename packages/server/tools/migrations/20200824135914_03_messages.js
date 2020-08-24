@@ -13,13 +13,8 @@ exports.up = async function(knex) {
       .string('content')
       .notNullable()
     table
-      .integer('game_id')
-      .unsigned()
-      .references('id')
-      .inTable('user')
-      .notNullable()
-      .onDelete('CASCADE');
-    table.text('history').notNullable();
+      .string('game_id')
+      .nullable()
   });
 };
 

@@ -8,5 +8,6 @@ const router = Router();
 const api = makeClassInvoker(GameController);
 
 router.get('/:id', AuthService.ensureAuthenticated, api('findById'));
+router.get('/:id/messages', AuthService.ensureAuthenticated, api('findGameMessages'));
 
 export const gameRoutes = router;
