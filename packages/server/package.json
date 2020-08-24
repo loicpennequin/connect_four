@@ -12,9 +12,9 @@
     "postbuild": "cross-env NODE_ENV=production npm run migrate:latest",
     "webpack-watch": "webpack --watch",
     "serve": "wait-on ./dist/bundle.js && cross-env NODE_ENV=development nodemon dist/bundle.js",
-    "migrate:make": "knex migrate:make",
-    "migrate:latest": "knex migrate:latest",
-    "migrate:rollback": "knex migrate:rollback",
+    "migrate:make": "cross-env NODE_ENV=development knex migrate:make",
+    "migrate:latest": "cross-env NODE_ENV=development knex migrate:latest",
+    "migrate:rollback": "cross-env NODE_ENV=development knex migrate:rollback",
     "test": "jest --watch"
   },
   "author": "",

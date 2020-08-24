@@ -50,7 +50,6 @@ const GameHistoryItem = styled.div`
   justify-content: center;
   align-items: center;
   padding: ${spacing('sm')} ${spacing('md')};
-  width: 28em;
   grid-gap: ${spacing('sm')};
 
   @media screen and (${mobileOnly}) {
