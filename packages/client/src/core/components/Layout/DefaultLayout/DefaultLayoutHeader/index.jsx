@@ -7,7 +7,7 @@ import { useToast } from '@core/hooks/useToast';
 import { useAuth } from '@auth/hooks/useAuth';
 import { useCurrentUser } from '@user/hooks/useCurrentUser';
 
-import { spacing, fontSize, color } from '@styles/mixins';
+import { spacing, fontSize, color, mobileOnly } from '@styles/mixins';
 import { Link } from '@core/components/Link';
 import { Button } from '@core/components/Button';
 import { Container } from '@core/components/Container';
@@ -75,7 +75,11 @@ const HeaderLeft = styled(Flex)`
   }
 `;
 
-const Username = styled.span``;
+const Username = styled.span`
+  @media screen and (${mobileOnly}) {
+    display: none;
+  }
+`;
 
 const Header = styled.header`
   color: ${color('brandInvert')};

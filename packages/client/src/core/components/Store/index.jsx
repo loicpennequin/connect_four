@@ -5,19 +5,26 @@ import { ToastProvider } from '@root/core/components/Toast';
 import { ChallengeProvider } from '@game/contexts/challengeContext';
 import { CurrentGameProvider } from '@game/contexts/currentGameContext';
 import { LobbyProvider } from '@game/contexts/lobbyContext';
+import { GlobalStyles } from '@root/core/GlobalStyles';
+import { Layout } from '@core/components/Layout';
 
 export function Store({ children }) {
   return (
-    <AuthProvider>
-      <ThemeProvider>
+    <ThemeProvider>
+      <GlobalStyles />
+      <AuthProvider>
         <ToastProvider>
           <ChallengeProvider>
             <LobbyProvider>
-              <CurrentGameProvider>{children}</CurrentGameProvider>
+              <CurrentGameProvider>
+                <Layout>
+                  {children}
+                </Layout>
+              </CurrentGameProvider>
             </LobbyProvider>
           </ChallengeProvider>
         </ToastProvider>
-      </ThemeProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

@@ -13,14 +13,15 @@ export function Route({ authLevel, layout, ...props }) {
   const setCurrentLayout = useContext(layoutContext);
 
   useEffect(() => {
-    setCurrentLayout(layout)
+    setCurrentLayout(layout);
   }, [layout, setCurrentLayout]);
   
+
   if (isDefined(currentUser.data) && authLevel === constants.AUTH_LEVELS.PUBLIC_ONLY) {
     return <Redirect to={constants.PATHS.AUTHENTICATED_REDIRECT_PATH} />
   } else if (isUndefined(currentUser.data) && authLevel === constants.AUTH_LEVELS.PRIVATE) {
     return <Redirect to={constants.PATHS.UNAUTHORIZED_REDIRECT_PATH} />
   } else {
-    return <MemoizedRoute {...props} />
+    return <MemoizedRoute {...props}/>
   }
 } 

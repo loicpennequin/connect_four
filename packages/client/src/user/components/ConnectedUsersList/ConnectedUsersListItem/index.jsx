@@ -52,7 +52,7 @@ export function ConnectedUsersListItem({ user, ...props }) {
     <Transition appear={true} timeout={transitionDuration} {...props}>
       {state => (
         <Wrapper state={state} transitionDuration={transitionDuration}>
-          <Link to="Profile" params={{id: user.id}}>{user.username}</Link>
+          <Username to="Profile" params={{id: user.id}}>{user.username}</Username>
           <ActionList>
             {isChallengeable && (
               <Button
@@ -106,7 +106,7 @@ const Wrapper = styled.li`
   padding: ${spacing('sm')} 0;
   color: ${color('brand')};
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 2fr;
   align-items: center;
   transition: all ${props => props.transitionDuration}ms;
   ${props => getTransitionStyles(props.state)}
@@ -116,4 +116,8 @@ const ActionList = styled(Flex)`
   & > * {
     margin: ${spacing('sm')};
   }
+`;
+
+const Username = styled(Link)`
+  padding: ${spacing('sm')};
 `;

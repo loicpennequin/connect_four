@@ -5,7 +5,6 @@ import { AuthService } from '@root/modules/auth';
 import { MessageService } from '@root/modules/message';
 import { PasswordService, TokenService } from '@root/modules/core';
 import { WebSocketService } from './modules/core/WebSocketService';
-import * as message from '@root/modules/message';
 
 export const container = createContainer();
 

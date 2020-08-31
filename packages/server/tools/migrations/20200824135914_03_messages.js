@@ -10,7 +10,7 @@ exports.up = async function(knex) {
       .notNullable()
       .onDelete('CASCADE');
     table
-      .string('content')
+      .text('content')
       .notNullable()
     table
       .string('game_id')

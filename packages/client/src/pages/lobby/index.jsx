@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useChallenge } from '@game/hooks/useChallenge';
 import { lobbyContext } from '@root/game/contexts/lobbyContext';
 
-import { spacing } from '@styles/mixins';
+import { spacing, mobileOnly } from '@styles/mixins';
 
 import { Container } from '@core/components/Container';
 import { Flex } from '@core/components/Flex';
@@ -34,10 +34,14 @@ export default function LobbyPage() {
             <div>Starting your Game...</div>
           </LoadingWrapper>
         ) : (
-          <>
-            <MessageList />
-            <ConnectedUsersList />
-          </>
+          <Grid>
+            <div>
+              <MessageList />
+            </div>
+            <aside>
+              <ConnectedUsersList />
+            </aside>
+          </Grid>
         )}
       </Surface>
     </Wrapper>
@@ -46,6 +50,9 @@ export default function LobbyPage() {
 
 const Wrapper = styled(Container)`
   display: flex;
+  height: 100%;
+  overflow-y: hidden;
+  
   & > * {
     flex-grow: 1;
   }
@@ -65,4 +72,20 @@ const spin = keyframes`
 
 const Spinner = styled.div`
   animation: ${spin} 1.5s linear infinite;
+`;
+
+const Grid = styled.div`
+  height: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  
+  & > *,
+  & > * > * {
+    height: 100%;
+    overflow-y: hidden;
+  }
+
+  @media screen and (${mobileOnly}) {
+    display: block;
+  }
 `;

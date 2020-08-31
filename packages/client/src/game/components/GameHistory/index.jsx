@@ -18,12 +18,11 @@ export function GameHistory({ userId }) {
   return (
     <div>
       <GameHistoryMetrics gameHistory={gameHistory} />
-      
+      <HistoryTitle>Game History</HistoryTitle>
       {gameHistory.games.length === 0 && (
         <p>This player has not played any game yet.</p>
       )}
 
-      <HistoryTitle>Game History</HistoryTitle>
       <Flex as="ul" direction="column" align="center">
         {gameHistory.games.map(game => (
           <GameHistoryItem as="li" key={game.id}>

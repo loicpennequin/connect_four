@@ -13,11 +13,13 @@ export function DefaultLayout({ children }) {
 }
 
 const Wrapper = styled.div`
-  min-height: 100vh;
+  height: 100vh;
+  overflow: auto;
   display: grid;
   grid-template-rows: auto 1fr;
 
-  main > * {
+  main {
     height: 100%;
+    overflow: hidden;
   }
 `;

@@ -35,9 +35,9 @@ export function ConnectedUsersList() {
   );
 }
 
-const Wrapper = styled.div`
-  padding: ${spacing('sm')};
-`;
+const Wrapper = styled.div``;
+
 const Title = styled.h3`
   margin-top: 0;
+  padding: ${spacing('sm')};
 `;

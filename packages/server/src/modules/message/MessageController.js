@@ -12,16 +12,17 @@ export class MessageController {
   async findAllFromLobby(req, res) {
     const messages = await this.messageService.findAll({
       filter: { game_id: null },
-      order: [{ column: 'created_at', order: 'desc' }]
+      order: [{ column: 'created_at', order: 'desc' }],
+      offset: req.query.offset || 0,
+      limit: req.params.limit || 30
     });
-
     res.send(messages.map(MessageSerializer.toDTO));
   }
 
   @withLog()
   @wrap()
   async create(req, res) {
-    const user = await this.messageService.create(req.body);
-    res.send(MessageSerializer.toDTO(user));
+    const message = await this.messageService.create(req.body);
+    res.send(MessageSerializer.toDTO(message));
   }
 }

@@ -21,6 +21,7 @@ const makeCustomProperties = category => props => {
 
 export const GlobalStyles = createGlobalStyle`
     ${normalize()}
+
     :root{
         ${makeCustomProperties('color')}
         ${makeCustomProperties('spacing')}
@@ -28,6 +29,10 @@ export const GlobalStyles = createGlobalStyle`
         ${makeCustomProperties('layout')}
     }
     
+    * {
+        box-sizing: border-box;
+    }
+
     body {
         font-family: ${font('primary')};
         background-color: ${color('background')};

@@ -11,8 +11,10 @@ export class MessageService {
     );
   }
 
-  static async getLobbyMessages() {
-    const json = await httpClient.get('/messages');
+  static async getLobbyMessages({ offset }) {
+    const json = await httpClient.get(`/messages`, {
+      query: { offset }
+    });
     const messagesWithAuthor = await Promise.all(
       json.map(async message => ({
         ...message,
@@ -20,12 +22,14 @@ export class MessageService {
       }))
     );
 
-    return messagesWithAuthor.map(MessageSerializer.toDomain);
+    return messagesWithAuthor.map(MessageSerializer.toDomain)
   }
 
-  static async getGameMessages(id) {
-    const json = await httpClient.get(`/games/${id}/messages`);
-    
+  static async getGameMessages(id, { page }) {
+    const json = await httpClient.get(`/games/${id}/messages`, {
+      query: { page }
+    });
+
     return json.map(MessageSerializer.toDomain);
   }
 
@@ -35,5 +39,10 @@ export class MessageService {
     return await httpClient.post(`/messages`, {
       body: MessageSerializer.toDto(data)
     });
+  }
+
+  static async processDTO(dto) {
+    dto.author = await MessageService._getMessageAuthor(dto);
+    return MessageSerializer.toDomain(dto);
   }
 }
