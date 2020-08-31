@@ -5,7 +5,7 @@ import { constants } from '@c4/shared';
 import { useWebsockets } from '@core/hooks/useWebsockets';
 
 const { EVENTS } = constants;
-const ITEMS_PER_PAGE = 30;
+const ITEMS_PER_PAGE = 10;
 
 export function useMessages(id) {
   const { on } = useWebsockets({ connectOnMount: false });
@@ -17,12 +17,7 @@ export function useMessages(id) {
 
   const messages = useInfiniteQuery(
     ['messages', id],
-    () => {
-      const offset = messages.data?.reduce?.(
-        (total, current) => total + current.length,
-        0
-      );
-
+    (key, _, offset) => {
       if (id) return MessageService.getGameMessages(id, { offset });
       return MessageService.getLobbyMessages({ offset });
     },
@@ -36,7 +31,7 @@ export function useMessages(id) {
       }
     }
   );
-  
+
   useEffect(() => {
     const unsub = on(EVENTS.NEW_GAME_MESSAGE, async dto => {});
     return unsub;

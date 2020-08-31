@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMessages } from '@message/hooks/useMessages';
 import { useCurrentUser } from '@user/hooks/useCurrentUser';
 
-import { spacing, color } from '@styles/mixins';
+import { spacing, color, mobileOnly } from '@styles/mixins';
 
 import { Flex } from '@core/components/Flex';
 import { Button } from '@core/components/Button';
@@ -94,6 +94,11 @@ const MessageFormSubmit = styled(Button)`
 const Wrapper = styled.div`
   display: grid;
   grid-template-rows: 1fr auto;
+  height: 100%;
+
+  @media screen and (${mobileOnly}) {
+    padding: ${spacing('xs')};
+  }
   ul {
     overflow-y: auto;
     /* Firefox */

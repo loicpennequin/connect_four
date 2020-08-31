@@ -11,9 +11,9 @@ export class MessageService {
     );
   }
 
-  static async getLobbyMessages({ offset }) {
+  static async getLobbyMessages({ offset = 0 }) {
     const json = await httpClient.get(`/messages`, {
-      query: { offset }
+      query: { offset, limit: 10 }
     });
     const messagesWithAuthor = await Promise.all(
       json.map(async message => ({
@@ -27,7 +27,7 @@ export class MessageService {
 
   static async getGameMessages(id, { page }) {
     const json = await httpClient.get(`/games/${id}/messages`, {
-      query: { page }
+      query: { page, limit: 10 }
     });
 
     return json.map(MessageSerializer.toDomain);

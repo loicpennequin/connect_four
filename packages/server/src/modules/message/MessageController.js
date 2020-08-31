@@ -14,7 +14,7 @@ export class MessageController {
       filter: { game_id: null },
       order: [{ column: 'created_at', order: 'desc' }],
       offset: req.query.offset || 0,
-      limit: req.params.limit || 30
+      limit: req.query.limit || 30
     });
     res.send(messages.map(MessageSerializer.toDTO));
   }

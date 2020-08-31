@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,13 +8,13 @@ import { spacing, color } from '@styles/mixins';
 
 import { Flex } from '@core/components/Flex';
 
-export function InfiniteScroll({
+export const InfiniteScroll = memo(({
   children,
   onIntersect,
   isLoading,
   enabled,
   ...props
-}) {
+}) => {
   const [currentIntersection, setCurrentIntersection] = useState(null);
   const loadMoreDownRef = useRef(null);
   const loadMoreUpRef = useRef(null);
@@ -45,7 +45,7 @@ export function InfiniteScroll({
       </Trigger>
     </Wrapper>
   );
-}
+});
 
 const spin = keyframes`
   from {

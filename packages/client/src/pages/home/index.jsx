@@ -22,13 +22,17 @@ export default function HomePage() {
   };
 
   return (
-    <Flex justify="center" align="center">
+    <Wrapper justify="center" align="center">
       <Content>
         <SignInForm onSubmit={handleSubmit} />
       </Content>
-    </Flex>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled(Flex)`
+  height: 100%;
+`;
 
 const Content = styled(Surface)`
   @media screen and (${mobileOnly}) {
