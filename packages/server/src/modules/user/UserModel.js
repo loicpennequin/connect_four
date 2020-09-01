@@ -36,7 +36,9 @@ export class User extends BaseModel {
 
       is_online: Joi.boolean()
         .allow(null)
-        .optional()
+        .optional(),
+      
+      status: Joi.number().integer()
     };
   }
 

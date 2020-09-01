@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import clone from 'clone';
-import { constants, isDefined } from '@c4/shared';
+import { constants, enums, isDefined } from '@c4/shared';
 import { container } from '@root/container';
 import { withLog } from '@root/logger';
 import { wrapDecorator as wrap } from '@root/modules/core/ErrorFactory';
@@ -16,6 +16,7 @@ export class GameRoom {
   constructor({ playerIds }) {
     this.websocketService = container.resolve('webSocketService');
     this.gameService = container.resolve('gameService');
+    this.userService = container.resolve('userService');
 
     this.state = {
       id: uuid(),
@@ -52,9 +53,10 @@ export class GameRoom {
     this._updateBoard(data.column);
     this._updateWinner();
     this._updateCurrentPlayer();
+
     this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
     this.history.push(clone(this.state));
-    
+
     if (this.state.winner) {
       await this.gameService.create({
         user1Id: this.state.playerIds[0],
@@ -63,9 +65,16 @@ export class GameRoom {
         history: JSON.stringify(this.history)
       });
 
-      this.websocketService.emit(EVENTS.GAME_HAS_FINISHED, this.state, ...this.clients);
+      this.state.playerIds.forEach(id =>
+        this.userService.update(id, { status: enums.USER_STATUSES.READY })
+      );
+      
+      this.websocketService.broadcast(
+        EVENTS.GAME_HAS_FINISHED,
+        {},
+      );
       this.gameService.removeGameInstance(this.state.id);
-    } 
+    }
   }
 
   _createBoard() {
@@ -78,7 +87,7 @@ export class GameRoom {
 
   _updateBoard(colIndex) {
     if (this.state.board[colIndex].every(Boolean)) return;
-    
+
     this.state.board.forEach((column, i) => {
       if (i === colIndex) {
         column[column.indexOf(null)] = {

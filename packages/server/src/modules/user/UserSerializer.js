@@ -7,6 +7,7 @@ export class UserSerializer {
       id: data.id,
       username: data.username,
       email: data.email,
+      status: data.status,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
       isOnline: !!data.is_online,
@@ -20,6 +21,7 @@ export class UserSerializer {
       email: data.email,
       password: data.password,
       passwordConfirm: data.passwordConfirm,
+      status: data.status,
       refresh_token: data.refreshToken,
       is_online: data.isOnline
     });

@@ -1,4 +1,4 @@
-import { constants } from '@c4/shared';
+import { constants, enums } from '@c4/shared';
 import { wrapDecorator as wrap } from '@root/modules/core/ErrorFactory';
 import { withLog } from '@root/logger';
 import { UserSerializer } from '@root/modules/user';
@@ -111,6 +111,10 @@ export class GameSubscribers {
         challenge.challengedId === challengedId ||
         challenge.challengedId === challengerId
     );
+
+    // TODO put this in UserSubscribers
+    this.userService.update(challengerId, { status: enums.USER_STATUSES.IN_GAME});
+    this.userService.update(challengedId, { status: enums.USER_STATUSES.IN_GAME});
 
     challengesToCancel.forEach(challenge => {
       this.onChallengeCancelled(ws, challenge);

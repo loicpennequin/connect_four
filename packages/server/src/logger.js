@@ -66,7 +66,8 @@ class LogService {
     // prevents logs pollution in graphQL playground
     if (
       req.body?.operationName !== 'IntrospectionQuery' &&
-      !req.url.endsWith('.js')
+      !req.url.endsWith('.js') && 
+      !['OPTIONS', 'HEAD'].includes(req.method.toUpperCase())
     ) {
       this.logger.info(`===========================`);
       this.logger.info(

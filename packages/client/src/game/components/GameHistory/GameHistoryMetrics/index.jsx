@@ -6,32 +6,34 @@ import { color, spacing, fontSize, fontWeight } from '@styles/mixins';
 import { Flex } from '@core/components/Flex';
 
 export function GameHistoryMetrics({ gameHistory }) {
-
-  const winRatePercentage = useMemo(
-    () => gameHistory && gameHistory.winRate * 100 + '%',
-    [gameHistory]
-  );
+  const winRatePercentage = useMemo(() => {
+    if (!gameHistory) return null;
+    const hasDecimal =
+      gameHistory.winRate * 100 !== Math.round(gameHistory.winRate * 100);
+      
+      return (gameHistory.winRate * 100).toFixed(hasDecimal ? 2 : 0) + '%';
+  }, [gameHistory]);
 
   return (
-      <Wrapper justify="space-around">
-        <Flex direction="column">
-          <InfoLabel>Games played</InfoLabel>
-          <GameCount justify="center" align="center">
-            {gameHistory.games.length}
-          </GameCount>
-        </Flex>
-        <div>
-          <InfoLabel>Win rate</InfoLabel>
-          <WinRate
-            justify="center"
-            align="center"
-            winRatePercentage={winRatePercentage}
-            winRate={gameHistory.winRate}
-          >
-            <div>{winRatePercentage}</div>
-          </WinRate>
-        </div>
-      </Wrapper>
+    <Wrapper justify="space-around">
+      <Flex direction="column">
+        <InfoLabel>Games played</InfoLabel>
+        <GameCount justify="center" align="center">
+          {gameHistory.games.length}
+        </GameCount>
+      </Flex>
+      <div>
+        <InfoLabel>Win rate</InfoLabel>
+        <WinRate
+          justify="center"
+          align="center"
+          winRatePercentage={winRatePercentage}
+          winRate={gameHistory.winRate}
+        >
+          <div>{winRatePercentage}</div>
+        </WinRate>
+      </div>
+    </Wrapper>
   );
 }
 

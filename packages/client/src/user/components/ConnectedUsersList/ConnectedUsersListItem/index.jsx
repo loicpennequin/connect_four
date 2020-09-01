@@ -1,6 +1,7 @@
 import React, { useMemo, useContext } from 'react';
 import styled from 'styled-components';
 import { Transition } from 'react-transition-group';
+import { enums } from '@c4/shared';
 
 import { useChallenge } from '@game/hooks/useChallenge';
 import { lobbyContext } from '@root/game/contexts/lobbyContext';
@@ -21,14 +22,17 @@ export function ConnectedUsersListItem({ user, ...props }) {
   const { setIsGameLoading } = useContext(lobbyContext);
   const transitionDuration = 300;
 
+  const isPlaying = useMemo(() => user.status === enums.USER_STATUSES.IN_GAME, [user.status]);
+
   const isChallengeable = useMemo(
     () =>
+      !isPlaying && 
       pendingChallenges.every(
         challenge =>
           challenge.challengedId !== user.id &&
           challenge.challengerId !== user.id
       ),
-    [user, pendingChallenges]
+    [isPlaying, pendingChallenges, user.id]
   );
 
   const isCancellable = useMemo(
@@ -54,6 +58,8 @@ export function ConnectedUsersListItem({ user, ...props }) {
         <Wrapper state={state} transitionDuration={transitionDuration}>
           <Username to="Profile" params={{id: user.id}}>{user.username}</Username>
           <ActionList>
+            {isPlaying && <p>This player is currently in a game.</p>}
+
             {isChallengeable && (
               <Button
                 variant="brand"

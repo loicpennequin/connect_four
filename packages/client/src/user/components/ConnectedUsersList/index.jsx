@@ -1,15 +1,24 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import { TransitionGroup } from 'react-transition-group';
+import { constants } from '@c4/shared';
 import { useCurrentUser } from '@root/user/hooks/useCurrentUser';
 import { useUsers } from '@root/user/hooks/useUsers';
+import { useWebsockets } from '@core/hooks/useWebsockets';
 
 import { spacing } from '@styles/mixins';
 import { ConnectedUsersListItem } from './ConnectedUsersListItem';
 
+const { EVENTS } = constants;
+
 export function ConnectedUsersList() {
   const currentUser = useCurrentUser();
   const { connectedUsers } = useUsers();
+  const { on } = useWebsockets();
+
+  useEffect(() => {
+    on(EVENTS.GAME_HAS_FINISHED, connectedUsers.refetch);
+  }, [connectedUsers.refetch, on]);
 
   const otherUsers = useMemo(
     () =>
