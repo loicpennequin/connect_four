@@ -12,6 +12,7 @@ export function useUser(id) {
   const user = useQuery(
     ['user', id],
     async () => {
+      if (!id) return null;
       return UserService.getUserById(id);
     },
     {

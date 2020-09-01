@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { constants } from '@c4/shared';
 import { useWebsockets } from '@core/hooks/useWebsockets';
+import { useToast } from '@core/hooks/useToast';
 
 const { EVENTS } = constants;
 
@@ -10,6 +11,7 @@ export function ChallengeProvider({ children }) {
   const [pendingChallenges, setPendingChallenges] = useState([]);
 
   const { on } = useWebsockets();
+  const { show } = useToast();
 
   useEffect(() => {
     const unsub = on(
@@ -24,11 +26,13 @@ export function ChallengeProvider({ children }) {
             challengedId: challenged.id
           })
         );
+
+        show(`${challenger.username} challenged you !`)
       }
     );
 
     return unsub;
-  }, [on, pendingChallenges, setPendingChallenges]);
+  }, [on, pendingChallenges, setPendingChallenges, show]);
 
   useEffect(() => {
     const unsub = on(

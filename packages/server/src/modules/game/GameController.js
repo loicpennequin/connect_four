@@ -25,7 +25,9 @@ export class GameController {
          async findGameMessages(req, res) {
            const messages = await this.messageService.findAll({
              filter: { game_id: req.params.id },
-             order: [{ column: 'created_at', order: 'desc' }]
+             order: [{ column: 'created_at', order: 'desc' }],
+             offset: req.query.offset || 0,
+             limit: req.query.limit || 30
            });
 
            res.send(messages.map(MessageSerializer.toDTO));

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef, useLayoutEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -7,26 +7,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMessages } from '@message/hooks/useMessages';
 import { useCurrentUser } from '@user/hooks/useCurrentUser';
 
-import { spacing, color, mobileOnly } from '@styles/mixins';
+import { spacing, mobileOnly } from '@styles/mixins';
 
 import { Flex } from '@core/components/Flex';
 import { Button } from '@core/components/Button';
 import { TextInput } from '@core/components/TextInput';
 import { InfiniteScroll } from '@core/components/InfiniteScroll';
 
-export function MessageList({ id }) {
+export function MessageList({ gameId = null, ...props }) {
   const {
     messages: { fetchMore, canFetchMore, isFetchingMore, isLoading },
     allMessages,
     createMessage
-  } = useMessages(null);
+  } = useMessages(gameId);
+  const [isInfiniteScrollEnabled, setIsInfiniteScrollEnabled] = useState(false);
   const { register, handleSubmit } = useForm();
   const { data: currentUser } = useCurrentUser();
+  const listRef = useRef();
+  
   const submit = async (values, e) => {
     await createMessage({
       ...values,
       authorId: currentUser.id,
-      gameId: id
+      gameId
     });
     e.target.reset();
   };
@@ -38,28 +41,36 @@ export function MessageList({ id }) {
     },
     [fetchMore]
   );
+  
+  useLayoutEffect(() => {
+    if (isLoading) return;
+    listRef.current.scrollTop = listRef.current.scrollHeight
+    setTimeout(() => setIsInfiniteScrollEnabled(true), 1000);
+  }, [isLoading]);
 
   if (isLoading) return <div>Loading messages...</div>;
 
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       {allMessages.length === 0 && <div>No messages.</div>}
-      <Flex
-        as={InfiniteScroll}
-        direction="column-reverse"
-        wrap="nowrap"
-        enabled={canFetchMore}
-        onIntersect={handleIntersect}
-        isLoading={!!isFetchingMore}
-      >
-        {allMessages.map(message => (
-          <Message key={message.id}>
-            <strong>{message.author.username}</strong>: {message.content}
-          </Message>
-        ))}
-      </Flex>
+      <div ref={listRef}>
+        <Flex
+          as={InfiniteScroll}
+          direction="column-reverse"
+          wrap="nowrap"
+          enabled={canFetchMore && isInfiniteScrollEnabled}
+          onIntersect={handleIntersect}
+          isLoading={!!isFetchingMore}
+        >
+          {allMessages.map(message => (
+            <Message key={message.id}>
+              <strong>{message.author.username}</strong>: {message.content}
+            </Message>
+          ))}
+        </Flex>
+      </div>
       <MessageForm noValidate onSubmit={handleSubmit(submit)}>
-        <MessageInput type="text" name="content" ref={register} />
+        <MessageInput type="text" name="content" ref={register} autocomplete="off"/>
         <MessageFormSubmit type="submit">
           <FontAwesomeIcon icon={faPaperPlane} />
         </MessageFormSubmit>
@@ -96,29 +107,11 @@ const Wrapper = styled.div`
   grid-template-rows: 1fr auto;
   height: 100%;
 
+  & > div {
+    overflow-y: auto;
+  }
+
   @media screen and (${mobileOnly}) {
     padding: ${spacing('xs')};
-  }
-  ul {
-    overflow-y: auto;
-    /* Firefox */
-    scrollbar-color: ${color('brand')};
-    scrollbar-width: 8px;
-    --scrollbar-thumb: ${color('brandHalf')};
-
-    &:hover {
-      --scrollbar-thumb: ${color('brand')};
-    }
-    /* Chrome */
-    ::-webkit-scrollbar {
-      width: 8px;
-      background-color: transparent;
-      overflow-x: hidden;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb);
-      border-radius: 10px;
-    }
   }
 `;

@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { MessageService } from '@message/api/MessageService';
 import { useInfiniteQuery, useMutation, queryCache } from 'react-query';
 import { constants } from '@c4/shared';
 import { useWebsockets } from '@core/hooks/useWebsockets';
 
 const { EVENTS } = constants;
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 30;
 
 export function useMessages(id) {
   const { on } = useWebsockets({ connectOnMount: false });
@@ -32,19 +32,21 @@ export function useMessages(id) {
     }
   );
 
-  useEffect(() => {
-    const unsub = on(EVENTS.NEW_GAME_MESSAGE, async dto => {});
-    return unsub;
-  }, [on, id, messages]);
-
-  useEffect(() => {
-    const unsub = on(EVENTS.NEW_LOBBY_MESSAGE, async dto => {
-      const currentData = queryCache.getQueryData(['messages', id]);
+  const _onMessage = useCallback(async dto => {
+    const currentData = queryCache.getQueryData(['messages', id]);
       currentData[0].unshift(await MessageService.processDTO(dto));
       queryCache.setQueryData(['messages', id], currentData);
-    });
+  }, [id]);
+
+  useEffect(() => {
+    const unsub = on(EVENTS.NEW_GAME_MESSAGE, _onMessage);
     return unsub;
-  }, [on, id, messages]);
+  }, [on, id, messages, _onMessage]);
+
+  useEffect(() => {
+    const unsub = on(EVENTS.NEW_LOBBY_MESSAGE, _onMessage);
+    return unsub;
+  }, [on, id, messages, _onMessage]);
 
   return {
     messages,

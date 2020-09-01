@@ -51,7 +51,7 @@ const drop = keyframes`
 `;
 
 const StyledBoard = styled.div`
-  --cell-size: 6em;
+  --cell-size: 5em;
   position: relative;
   display: grid;
   grid-template-columns: repeat(${props => props.columns}, 1fr);
@@ -59,7 +59,6 @@ const StyledBoard = styled.div`
   height: calc(${props => props.rows} * var(--cell-size));
   width: calc(${props => props.columns} * var(--cell-size));
   max-width: 100%;
-  margin: 1em auto;
   @media screen and (max-width: 768px) {
     --cell-size: 4em;
   }

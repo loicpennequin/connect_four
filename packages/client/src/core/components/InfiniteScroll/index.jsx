@@ -13,6 +13,7 @@ export const InfiniteScroll = memo(({
   onIntersect,
   isLoading,
   enabled,
+  useInternalRoot = false,
   ...props
 }) => {
   const [currentIntersection, setCurrentIntersection] = useState(null);
@@ -21,9 +22,10 @@ export const InfiniteScroll = memo(({
   const rootRef = useRef(null);
 
   useIntersectionObserver({
-    root: rootRef,
+    root: useInternalRoot && rootRef,
     targets: [loadMoreDownRef, loadMoreUpRef],
     onIntersect: entry => {
+      console.log(entry)
       setCurrentIntersection(entry.target.dataset.direction);
       onIntersect(entry.target.dataset.direction);
     },

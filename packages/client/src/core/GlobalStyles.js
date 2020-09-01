@@ -4,19 +4,19 @@ import { camelToKebabCase, isObject } from '@c4/shared';
 import { color, font } from '@styles/mixins';
 
 const makeCustomProperties = category => props => {
-    function recursion(obj, prefix) {
-        return Object.entries(obj).reduce(
-            (output, [key, value]) => [
-                ...output,
-                ...(isObject(value)
-                    ? recursion(value, `${prefix}-${key}`)
-                    : [`--${prefix}-${camelToKebabCase(key)}: ${value};`])
-            ],
-            []
-        );
-    }
+  function recursion(obj, prefix) {
+    return Object.entries(obj).reduce(
+      (output, [key, value]) => [
+        ...output,
+        ...(isObject(value)
+          ? recursion(value, `${prefix}-${key}`)
+          : [`--${prefix}-${camelToKebabCase(key)}: ${value};`])
+      ],
+      []
+    );
+  }
 
-    return recursion(props.theme[category], category).join('\n');
+  return recursion(props.theme[category], category).join('\n');
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -54,5 +54,27 @@ export const GlobalStyles = createGlobalStyle`
         &:focus {
             color: ${color('linkHovered')};
         }
+    }
+
+    * {
+        /* Firefox */
+    scrollbar-color: ${color('brand')};
+    scrollbar-width: 8px;
+    --scrollbar-thumb: ${color('brandHalf')};
+
+    &:hover {
+      --scrollbar-thumb: ${color('brand')};
+    }
+    /* Chrome */
+    ::-webkit-scrollbar {
+      width: 8px;
+      background-color: transparent;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-thumb);
+      border-radius: 10px;
+    }
     }
 `;

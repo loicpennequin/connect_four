@@ -11,9 +11,9 @@ export class MessageService {
     );
   }
 
-  static async getLobbyMessages({ offset = 0 }) {
-    const json = await httpClient.get(`/messages`, {
-      query: { offset, limit: 10 }
+  static async _getMessages(url, { offset }) {
+    const json = await httpClient.get(url, {
+      query: { offset, limit: 30 }
     });
     const messagesWithAuthor = await Promise.all(
       json.map(async message => ({
@@ -22,15 +22,15 @@ export class MessageService {
       }))
     );
 
-    return messagesWithAuthor.map(MessageSerializer.toDomain)
+    return messagesWithAuthor.map(MessageSerializer.toDomain);
+  }
+  
+  static async getLobbyMessages({ offset = 0 }) {
+    return MessageService._getMessages('/messages', { offset });
   }
 
-  static async getGameMessages(id, { page }) {
-    const json = await httpClient.get(`/games/${id}/messages`, {
-      query: { page, limit: 10 }
-    });
-
-    return json.map(MessageSerializer.toDomain);
+  static async getGameMessages(id, { offset }) {
+    return MessageService._getMessages(`/games/${id}/messages`, { offset });
   }
 
   static async createMessage(data) {

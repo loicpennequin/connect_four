@@ -37,7 +37,7 @@ export default function LobbyPage() {
             <div>Starting your Game...</div>
           </LoadingWrapper>
         ) : isMobile ? (
-          <Tabs>
+          <Tabs initialActiveTab={0}>
             <Tabs.Item label="Messages">
               <MessageList />
             </Tabs.Item>
@@ -67,6 +67,9 @@ const Wrapper = styled(Container)`
 
   & > * {
     flex-grow: 1;
+    @media screen and (${mobileOnly}) {
+      height: 94%; /* this is ugly but I can't find any other way... */
+    }
   }
 `;
 
