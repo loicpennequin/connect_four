@@ -16,6 +16,7 @@ import { GameOverModal } from '@game/components/GameOverModal';
 import { Link } from '@core/components/Link';
 import { Container } from '@core/components/Container';
 import { Surface } from '@core/components/Surface';
+import { Flex } from '@core/components/Flex';
 import { MessageList } from '@message/components/MessageList';
 import { Tabs } from '@core/components/Tabs';
 
@@ -64,7 +65,9 @@ export default function GamePage() {
             </Title>
             <Tabs initialActiveTab={0}>
               <Tabs.Item label="Game">
-                <Board boardState={state} onColumnClick={handleColumnClick} />
+                <BoardWrapper justify="center">
+                  <Board boardState={state} onColumnClick={handleColumnClick} />
+                </BoardWrapper>
               </Tabs.Item>
               <Tabs.Item label="Messages">
                 <StyledMessageList gameId={match.params.id} />
@@ -76,7 +79,7 @@ export default function GamePage() {
             <Title activePlayerIndex={activePlayerIndex}>
               <span>{user1?.username}</span> vs <span>{user2?.username}</span>
             </Title>
-            <Board boardState={state} onColumnClick={handleColumnClick} />
+            <Board boardState={state} onColumnClick={handleColumnClick} />    
             <StyledMessageList gameId={match.params.id} />
           </Grid>
         )}
@@ -89,8 +92,13 @@ const Wrapper = styled(Container)`
   height: 100vh;
   overflow: hidden;
 `;
+
 const ContentWrapper = styled(Surface)`
   height: 100%;
+`;
+
+const BoardWrapper = styled(Flex)`
+  padding: ${spacing('md')};
 `;
 
 const Grid = styled.div`

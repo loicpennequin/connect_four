@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { useRouteMatch } from 'react-router-dom';
 
 import { useReplay } from '@game/hooks/useReplay';
@@ -17,9 +18,15 @@ export default function ReplayPage() {
   return (
     <Container>
       <Surface>
-        <Board boardState={state} />
+        <BoardWrapper>
+          <Board boardState={state} />
+        </BoardWrapper>
         <ReplayControls controls={controls} />
       </Surface>
     </Container>
   );
 }
+
+const BoardWrapper = styled.div`
+  margin: 0 auto;
+`

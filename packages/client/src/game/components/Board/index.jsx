@@ -60,7 +60,7 @@ const StyledBoard = styled.div`
   width: calc(${props => props.columns} * var(--cell-size));
   max-width: 100%;
   @media screen and (max-width: 768px) {
-    --cell-size: 4em;
+    --cell-size: 3.25em;
   }
   &::after {
     background: linear-gradient(130deg, dodgerblue, navy);

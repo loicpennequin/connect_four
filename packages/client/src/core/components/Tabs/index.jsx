@@ -1,23 +1,32 @@
 import React, { useState, useMemo } from 'react';
 import { noop } from '@c4/shared';
 import styled from 'styled-components';
+import { TransitionGroup } from 'react-transition-group';
+
 import { spacing, color } from '@styles/mixins';
+
 import { Flex } from '@core/components/Flex';
+import { Fade } from '@core/components/Fade';
 
 export function Tabs({ children, initialActiveTab, onTabChange = noop }) {
   const tabLabels = useMemo(() => children.map(child => child.props.label), [
     children
   ]);
-  
-  const [activeTabLabel, setActiveTabLabel] = useState(tabLabels[initialActiveTab]);
-  const activeTab = children.find(
-    child => child.props.label === activeTabLabel
+
+  const [activeTabLabel, setActiveTabLabel] = useState(
+    tabLabels[initialActiveTab]
   );
+
+  const mappedChildren = useMemo(() => React.Children.map(children, child => {
+    const additionalProps = { isActive: child.props.label === activeTabLabel};
+    return React.cloneElement(child, additionalProps);
+  }), [activeTabLabel, children])
 
   const handleTabClick = label => {
     setActiveTabLabel(label);
     onTabChange(label);
-  }
+  };
+
   return (
     <>
       <Flex as="ul" justify="space-around" role="tabList">
@@ -29,12 +38,14 @@ export function Tabs({ children, initialActiveTab, onTabChange = noop }) {
           </Tab>
         ))}
       </Flex>
-      {activeTab}
+      <TransitionGroup component={null}>
+        {mappedChildren}
+      </TransitionGroup>
     </>
   );
 }
 
-Tabs.Item = ({ children }) => children;
+Tabs.Item = ({ children, isActive, ...props }) => isActive ? <Fade {...props}>{children}</Fade> : null;
 Tabs.Item.displayName = 'TabItem';
 
 const Tab = styled.li`
