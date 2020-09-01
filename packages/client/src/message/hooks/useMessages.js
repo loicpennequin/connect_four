@@ -33,6 +33,8 @@ export function useMessages(id) {
   );
 
   const _onMessage = useCallback(async dto => {
+    if (dto.gameId !== id) return;
+    
     const currentData = queryCache.getQueryData(['messages', id]);
       currentData[0].unshift(await MessageService.processDTO(dto));
       queryCache.setQueryData(['messages', id], currentData);

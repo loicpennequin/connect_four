@@ -86,7 +86,7 @@ export class GameSubscribers {
 
   @withLog()
   @wrap()
-  async onChallengeAccepted(_ws, { challengerId, challengedId }) {
+  async onChallengeAccepted(ws, { challengerId, challengedId }) {
     this._defaultChallengeHandler({
       responseEventName: constants.EVENTS.USER_ACCEPTED_CHALLENGE,
       clientsToNotify: [this.websocketService.getSocketByUserId(challengerId)],
@@ -100,6 +100,24 @@ export class GameSubscribers {
           challenge.challengedId === challengedId
         )
     );
+
+    const challengesToCancel = this._pendingChallenges.filter(
+      challenge => challenge.challengerId === challengedId ||
+      challenge.challengerId === challengerId
+    )
+    
+    const challengesToDecline = this._pendingChallenges.filter(
+      challenge =>
+        challenge.challengedId === challengedId ||
+        challenge.challengedId === challengerId
+    );
+
+    challengesToCancel.forEach(challenge => {
+      this.onChallengeCancelled(ws, challenge);
+    })
+    challengesToDecline.forEach(challenge => {
+      this.onChallengeRefused(ws, challenge);
+    })
 
     this.gameService.createGameInstance(challengerId, challengedId);
   }
