@@ -26,6 +26,7 @@ export function ReplayTree({ tree, onClick, currentNode }) {
     if (!wrapper || !currentNode) return;
 
     const element = wrapper.querySelector(`[data-node="${currentNode.uuid}"]`)
+    
     element?.scrollIntoView( { behavior: 'smooth' });
   }, [currentNode]);
 
