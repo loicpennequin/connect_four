@@ -1,16 +1,16 @@
 import React, { Suspense } from 'react';
 import { lazy } from 'react';
 import { constants } from '@c4/shared';
+
+import { FullPageLoading } from '@core/components/FullPageLoading';
 import { DefaultLayout } from '@core/components/Layout/DefaultLayout';
 import { FullPageLayout } from '@core/components/Layout/FullPageLayout';
-
-const Loading = () => <div>Page Loading...</div>;
 
 const pageComponentFactory = importFn => props => {
   const LazyComponent = lazy(importFn);
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<FullPageLoading />}>
       <LazyComponent {...props} />
     </Suspense>
   );

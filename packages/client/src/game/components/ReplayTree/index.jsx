@@ -14,8 +14,8 @@ export function ReplayTree({ tree, onClick, currentNode }) {
   };
 
   const getColor = (state, index) => {
-    if (index ===0) return 'brand';
-    
+    if (index === 0) return 'brand';
+
     return state.currentPlayer === state.playerIds[0]
       ? 'yellowChecker'
       : 'redChecker';
@@ -25,9 +25,9 @@ export function ReplayTree({ tree, onClick, currentNode }) {
     const wrapper = wrapperRef.current;
     if (!wrapper || !currentNode) return;
 
-    const element = wrapper.querySelector(`[data-node="${currentNode.uuid}"]`)
-    
-    element?.scrollIntoView( { behavior: 'smooth' });
+    const element = wrapper.querySelector(`[data-node="${currentNode.uuid}"]`);
+
+    element?.scrollIntoView({ behavior: 'smooth' });
   }, [currentNode]);
 
   const isCurrentNode = node => node === currentNode;
@@ -37,14 +37,15 @@ export function ReplayTree({ tree, onClick, currentNode }) {
         <Path wrap="nowrap" key={path.uuid}>
           <>
             {path.steps.map((node, stepIndex) => (
-              <Checker
-                data-node={node.uuid}
-                isCurrentNode={isCurrentNode(node)}
-                isVisible={!checkStepIsDuplicate(node, pathIndex)}
-                key={node.uuid}
-                color={getColor(node.value, stepIndex)}
-                onClick={() => onClick(node)}
-              />
+              <React.Fragment key={node.uuid}>
+                <Node
+                  data-node={node.uuid}
+                  isCurrentNode={isCurrentNode(node)}
+                  isVisible={!checkStepIsDuplicate(node, pathIndex)}
+                  color={getColor(node.value, stepIndex)}
+                  onClick={() => onClick(node)}
+                />
+              </React.Fragment>
             ))}
           </>
         </Path>
@@ -54,12 +55,13 @@ export function ReplayTree({ tree, onClick, currentNode }) {
 }
 
 const Wrapper = styled.div`
+  position: relative;
   height: 100%;
   overflow: auto;
 `;
 const Path = styled(Flex)``;
 
-const Checker = styled.div`
+const Node = styled.div`
   flex-shrink: 0;
   width: 3em;
   height: 3em;
@@ -70,3 +72,4 @@ const Checker = styled.div`
   border-color: ${props => props.isCurrentNode && color('brand')};
   ${props => !props.isVisible && 'opacity: 0;'}
 `;
+

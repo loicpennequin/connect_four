@@ -4,34 +4,43 @@ import styled, { keyframes } from 'styled-components';
 import { color, spacing, fontSize, fontWeight } from '@styles/mixins';
 
 import { Flex } from '@core/components/Flex';
+import { SkeletonCircle } from '@core/components/Skeleton';
 
 export function GameHistoryMetrics({ gameHistory }) {
   const winRatePercentage = useMemo(() => {
     if (!gameHistory) return null;
     const hasDecimal =
       gameHistory.winRate * 100 !== Math.round(gameHistory.winRate * 100);
-      
-      return (gameHistory.winRate * 100).toFixed(hasDecimal ? 2 : 0) + '%';
+
+    return (gameHistory.winRate * 100).toFixed(hasDecimal ? 2 : 0) + '%';
   }, [gameHistory]);
 
   return (
     <Wrapper justify="space-around">
       <Flex direction="column">
         <InfoLabel>Games played</InfoLabel>
-        <GameCount justify="center" align="center">
-          {gameHistory.games.length}
-        </GameCount>
+        {gameHistory ? (
+          <GameCount justify="center" align="center">
+            {gameHistory.games.length}
+          </GameCount>
+        ) : (
+          <SkeletonCircle height="7em" width="7em" />
+        )}
       </Flex>
       <div>
         <InfoLabel>Win rate</InfoLabel>
-        <WinRate
-          justify="center"
-          align="center"
-          winRatePercentage={winRatePercentage}
-          winRate={gameHistory.winRate}
-        >
-          <div>{winRatePercentage}</div>
-        </WinRate>
+        {gameHistory ? (
+          <WinRate
+            justify="center"
+            align="center"
+            winRatePercentage={winRatePercentage}
+            winRate={gameHistory.winRate}
+          >
+            <div>{winRatePercentage}</div>
+          </WinRate>
+        ) : (
+          <SkeletonCircle height="7em" width="7em" />
+        )}
       </div>
     </Wrapper>
   );

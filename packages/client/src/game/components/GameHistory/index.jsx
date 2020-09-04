@@ -9,11 +9,21 @@ import { GameHistoryMetrics } from './GameHistoryMetrics';
 import { Flex } from '@core/components/Flex';
 import { Link } from '@core/components/Link';
 import { Button } from '@core/components/Button';
+import { SkeletonList } from '@core/components/Skeleton';
 
 export function GameHistory({ userId }) {
   const { data: gameHistory, isLoading } = useGameHistory(userId);
 
-  if (isLoading) return <div>Loading game history...</div>;
+  if (isLoading) {
+    return (
+      <>
+        <GameHistoryMetrics gameHistory={gameHistory} />
+        <Flex justify="center">
+          <SkeletonList height="3em" width="50%"/>
+        </Flex>
+      </>
+    );
+  }
 
   return (
     <div>
@@ -29,14 +39,16 @@ export function GameHistory({ userId }) {
             <div>{game.getTimeAgo()}</div>
             <div>
               <Link to="Profile" params={{ id: game.opponent.id }}>
-              VS {game.opponent.username}
+                VS {game.opponent.username}
               </Link>
             </div>
             <GameHistoryItemResult isWin={game.isWin}>
               {game.isWin ? 'WIN' : 'LOSS'}
             </GameHistoryItemResult>
-            <Button as={Link} to="Replay" params={{id: game.id}}>Replay</Button>
-           </GameHistoryItem>
+            <Button as={Link} to="Replay" params={{ id: game.id }}>
+              Replay
+            </Button>
+          </GameHistoryItem>
         ))}
       </Flex>
     </div>
@@ -71,4 +83,4 @@ const GameHistoryItemResult = styled.div`
 
 const HistoryTitle = styled.h2`
   text-align: center;
-`
+`;
