@@ -12,17 +12,17 @@ import {
 
 export function ReplayControls({ controls }) {
   return (
-    <Flex justify="center">
-      <Button onClick={controls.goToFirstStep} plain>
+    <Flex justify="space-around">
+      <Button onClick={controls.first} plain>
         <FontAwesomeIcon icon={faStepBackward} size="2x" />
       </Button>
-      <Button onClick={controls.goToPreviousStep} plain>
+      <Button onClick={controls.previous} plain>
         <FontAwesomeIcon icon={faBackward} size="2x" />
       </Button>
-      <Button onClick={controls.goToNextStep} plain>
+      <Button onClick={controls.next} plain>
         <FontAwesomeIcon icon={faForward} size="2x" />
       </Button>
-      <Button onClick={controls.goToLastStep} plain>
+      <Button onClick={controls.last} plain>
         <FontAwesomeIcon icon={faStepForward} size="2x" />
       </Button>
     </Flex>

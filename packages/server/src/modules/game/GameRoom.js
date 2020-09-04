@@ -1,6 +1,5 @@
-import { v4 as uuid } from 'uuid';
 import clone from 'clone';
-import { constants, enums, isDefined } from '@c4/shared';
+import { constants, enums } from '@c4/shared';
 import { container } from '@root/container';
 import { withLog } from '@root/logger';
 import { wrapDecorator as wrap } from '@root/modules/core/ErrorFactory';
@@ -17,17 +16,9 @@ export class GameRoom {
     this.websocketService = container.resolve('webSocketService');
     this.gameService = container.resolve('gameService');
     this.userService = container.resolve('userService');
+    this.logic = container.resolve('gameLogic');
 
-    this.state = {
-      id: uuid(),
-      playerIds,
-      board: this._createBoard(),
-      winner: null,
-      rows: this.ROWS,
-      columns: this.COLUMNS,
-      currentPlayer: playerIds[Math.round(Math.random())]
-    };
-
+    this.state = this.logic.initializeState(playerIds);
     this.history = [clone(this.state)];
 
     this.websocketService.emit(
@@ -50,10 +41,7 @@ export class GameRoom {
   async onGameAction(_ws, data) {
     if (data.gameId !== this.state.id) return;
 
-    this._updateBoard(data.column);
-    this._updateWinner();
-    this._updateCurrentPlayer();
-
+    this.state = this.logic.handleGameAction(this.state, data.column);
     this.websocketService.emit(EVENTS.GAME_ACTION, this.state, ...this.clients);
     this.history.push(clone(this.state));
 
@@ -74,113 +62,6 @@ export class GameRoom {
         {},
       );
       this.gameService.removeGameInstance(this.state.id);
-    }
-  }
-
-  _createBoard() {
-    const board = [];
-    for (let i = 0; i < this.COLUMNS; i++) {
-      board.push(new Array(this.ROWS).fill(null));
-    }
-    return board;
-  }
-
-  _updateBoard(colIndex) {
-    if (this.state.board[colIndex].every(Boolean)) return;
-
-    this.state.board.forEach((column, i) => {
-      if (i === colIndex) {
-        column[column.indexOf(null)] = {
-          player: this.state.currentPlayer
-        };
-      }
-    });
-  }
-
-  _updateCurrentPlayer() {
-    if (this.state.currentPlayer === this.state.playerIds[0]) {
-      this.state.currentPlayer = this.state.playerIds[1];
-    } else {
-      this.state.currentPlayer = this.state.playerIds[0];
-    }
-  }
-
-  _updateWinner() {
-    const boardState = this.state.board;
-    const areEqual = (...values) => {
-      return (
-        isDefined(values[0]) &&
-        values.every(val => val?.player === values[0].player)
-      );
-    };
-
-    const checkLine = (...cells) => {
-      if (areEqual(...cells)) {
-        cells.forEach(cell => {
-          cell.isWinningCell = true;
-        });
-        return true;
-      }
-    };
-
-    const checkHorizontalLine = (colStart, rowStart) =>
-      checkLine(
-        boardState[colStart][rowStart],
-        boardState[colStart + 1][rowStart],
-        boardState[colStart + 2][rowStart],
-        boardState[colStart + 3][rowStart]
-      );
-
-    const checkVerticalLine = (colStart, rowStart) => {
-      return checkLine(
-        boardState[colStart][rowStart],
-        boardState[colStart][rowStart + 1],
-        boardState[colStart][rowStart + 2],
-        boardState[colStart][rowStart + 3]
-      );
-    };
-
-    const checkDiagonalLineDown = (colStart, rowStart) =>
-      checkLine(
-        boardState[colStart][rowStart],
-        boardState[colStart + 1][rowStart - 1],
-        boardState[colStart + 2][rowStart - 2],
-        boardState[colStart + 3][rowStart - 3]
-      );
-
-    const checkDiagonalLineUp = (colStart, rowStart) =>
-      checkLine(
-        boardState[colStart][rowStart],
-        boardState[colStart + 1][rowStart + 1],
-        boardState[colStart + 2][rowStart + 2],
-        boardState[colStart + 3][rowStart + 3]
-      );
-
-    let hasWinner = false;
-    for (let col = 0; col < this.state.columns; col++) {
-      for (let row = 0; row < this.state.rows; row++) {
-        if (hasWinner) break;
-        if (col <= this.state.columns - 4) {
-          hasWinner = checkHorizontalLine(col, row);
-          if (hasWinner) break;
-        }
-        if (row <= this.state.columns - 4) {
-          hasWinner = checkVerticalLine(col, row);
-          if (hasWinner) break;
-        }
-        if (row <= this.state.rows - 4 && col <= this.state.columns - 4) {
-          hasWinner = checkDiagonalLineUp(col, row);
-          if (hasWinner) break;
-        }
-        if (row >= this.state.rows - 4 && col <= this.state.columns - 4) {
-          hasWinner = checkDiagonalLineDown(col, row);
-          if (hasWinner) break;
-        }
-      }
-    }
-
-    if (hasWinner) {
-      this.state.winner = this.state.currentPlayer;
     }
   }
 }

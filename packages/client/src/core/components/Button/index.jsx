@@ -28,10 +28,12 @@ const BaseButton = styled.button`
 
   &:hover {
     background-color: ${props => props.theme.color[props.variant + 'Light']};
+    color: ${props => props.theme.color[props.variant + 'Invert']};
   }
-  
+
   &:focus {
     background-color: ${props => props.theme.color[props.variant + 'Lighter']};
+    color: ${props => props.theme.color[props.variant + 'Invert']};
   }
 
   &[disabled] {

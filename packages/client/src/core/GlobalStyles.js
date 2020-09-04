@@ -57,24 +57,25 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     * {
-        /* Firefox */
-    scrollbar-color: ${color('brand')};
-    scrollbar-width: 8px;
-    --scrollbar-thumb: ${color('brandHalf')};
+          /* Firefox */
+      scrollbar-color: ${color('brand')};
+      scrollbar-width: 5px;
+      --scrollbar-thumb: ${color('brandHalf')};
 
-    &:hover {
-      --scrollbar-thumb: ${color('brand')};
-    }
-    /* Chrome */
-    ::-webkit-scrollbar {
-      width: 8px;
-      background-color: transparent;
-      overflow-x: hidden;
-    }
+      &:hover {
+        --scrollbar-thumb: ${color('brand')};
+      }
+      /* Chrome */
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+        background-color: transparent;
+        overflow-x: hidden;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb);
-      border-radius: 10px;
-    }
+      ::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb);
+        border-radius: 10px;
+      }
     }
 `;

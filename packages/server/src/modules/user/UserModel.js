@@ -61,7 +61,6 @@ export class User extends BaseModel {
       .orWhere({ email: this.email })
       .first();
     if (user) {
-      console.log(user);
       throw errors.validationError('This username or email already exists.');
     }
     this.generateHashedPassword();

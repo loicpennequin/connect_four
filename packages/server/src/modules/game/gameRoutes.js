@@ -7,6 +7,7 @@ const router = Router();
 
 const api = makeClassInvoker(GameController);
 
+router.put('/replays', AuthService.ensureAuthenticated, api('generateGameState'));
 router.get('/:id', AuthService.ensureAuthenticated, api('findById'));
 router.get('/:id/messages', AuthService.ensureAuthenticated, api('findGameMessages'));
 
